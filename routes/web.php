@@ -15,11 +15,8 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-if(!isset($_COOKIE['lojaetc_id'])){
-    setcookie('lojaetc_id', session()->getId(), time() + (86400 * 90), "/");
-}
-
-if (request()->getHttpHost() === 'pardal.l.loja.etc.br') {
+if (strpos(request()->getHttpHost(),"pardal") === true) {
+    config(['database.connections.mysql_loja.database' => 'spcommerce_pardal']);
     Session::put('loja', 'pardal');
     Session::put('loja_email', 'contato@pardal.com.br');
     Session::put('loja_cep', '25730745');
@@ -36,6 +33,7 @@ if (request()->getHttpHost() === 'pardal.l.loja.etc.br') {
 }
 
 if (request()->getHttpHost() === 'casaverde.l.loja.etc.br') {
+    config(['database.connections.mysql_loja.database' => 'spcommerce_casaverde']);
     Session::put('loja', 'casaverde');
     Session::put('loja_email', 'contatotramahome@gmail.com');
     Session::put('loja_cep', '25730745');
@@ -50,6 +48,7 @@ if (request()->getHttpHost() === 'casaverde.l.loja.etc.br') {
 
 if (request()->getHttpHost() === 'tramahome.l.loja.etc.br') {
     Session::put('loja', 'tramahome');
+    config(['database.connections.mysql_loja.database' => 'spcommerce_tramahome']);
     Session::put('loja_email', 'contatotramahome@gmail.com');
     Session::put('loja_cep', '25730745');
     Session::put('loja_transportadora', ['Correios', 'JadLog']);

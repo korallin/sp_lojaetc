@@ -11,6 +11,10 @@
 |
 */
 
+if(!isset($_COOKIE['lojaetc_id'])){
+    setcookie('lojaetc_id', session()->getId(), time() + (86400 * 90), "/");
+}
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );

@@ -1,0 +1,1 @@
+[Tue Sep 28 20:25:50.997265 2021] [php7:error] [pid 19944:tid 2340] [client 138.185.96.123:17812] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in E:\\_srv\\host\\loja.etc.br\\loja\\storage\\framework\\views\\97a21c7a2e0d70c22de37aff10e11797c9e0322d.php on line 27, referer: https://tramahome.l.loja.etc.br/carrinho

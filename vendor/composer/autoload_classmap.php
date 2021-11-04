@@ -24,6 +24,7 @@ return array(
     'App\\Http\\Controllers\\Front\\Paginas' => $baseDir . '/app/Http/Controllers/Front/Paginas.php',
     'App\\Http\\Controllers\\Front\\WebControllerDB' => $baseDir . '/app/Http/Controllers/Front/WebControllerDB.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
+    'App\\Http\\Controllers\\PagSeguroController' => $baseDir . '/app/Http/Controllers/PagSeguroController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',

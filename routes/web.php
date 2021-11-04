@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-if (strpos(request()->getHttpHost(),"pardal") === true) {
+if(!isset($_COOKIE['lojaetc_id'])){
+    setcookie('lojaetc_id', session()->getId(), time() + (86400 * 90), "/");
+}
+
+
+if (strpos(request()->getHttpHost(),"pardal") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_pardal']);
     Session::put('loja', 'pardal');
     Session::put('loja_email', 'contato@pardal.com.br');
@@ -32,7 +37,7 @@ if (strpos(request()->getHttpHost(),"pardal") === true) {
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/pardal/produto/');
 }
 
-if (request()->getHttpHost() === 'casaverde.l.loja.etc.br') {
+if (strpos(request()->getHttpHost(),"casaverde") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_casaverde']);
     Session::put('loja', 'casaverde');
     Session::put('loja_email', 'contatotramahome@gmail.com');
@@ -46,9 +51,9 @@ if (request()->getHttpHost() === 'casaverde.l.loja.etc.br') {
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/gsacessorios/produto/');
 }
 
-if (request()->getHttpHost() === 'tramahome.l.loja.etc.br') {
-    Session::put('loja', 'tramahome');
+if (strpos(request()->getHttpHost(),"tramahome") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_tramahome']);
+    Session::put('loja', 'tramahome');
     Session::put('loja_email', 'contatotramahome@gmail.com');
     Session::put('loja_cep', '25730745');
     Session::put('loja_transportadora', ['Correios', 'JadLog']);

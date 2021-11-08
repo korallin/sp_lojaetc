@@ -68,7 +68,7 @@ return [
             'url' => env('DATABASE_URL_LOJA'),
             'host' => env('DB_HOST_LOJA', '127.0.0.1'),
             'port' => env('DB_PORT_LOJA', '3306'),
-            'database' => 'spcommerce_tramahome',//'spcommerce_'.\Illuminate\Support\Facades\Session::get('loja'), //env('DB_DATABASE_LOJA', 'forge'),
+            'database' => 'spcommerce_'.\Illuminate\Support\Facades\Session::get('loja'), //env('DB_DATABASE_LOJA', 'forge'),
             'username' => env('DB_USERNAME_LOJA', 'forge'),
             'password' => env('DB_PASSWORD_LOJA', ''),
             'unix_socket' => env('DB_SOCKET_LOJA', ''),

@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-if(!isset($_COOKIE['lojaetc_id'])){
-    setcookie('lojaetc_id', session()->getId(), time() + (86400 * 90), "/");
-}
 
 
 if (strpos(request()->getHttpHost(),"pardal") !== false) {
@@ -25,7 +22,7 @@ if (strpos(request()->getHttpHost(),"pardal") !== false) {
     Session::put('loja', 'pardal');
     Session::put('loja_email', 'contato@pardal.com.br');
     Session::put('loja_cep', '25730745');
-    Session::put('loja_transportadora', ['Correios', 'JadLog']);
+    Session::put('loja_transportadora', ['Correios', 'Jadlog', 'Jamef']);
     Session::put('loja_whatsapp', '24 98815-2465');
     Session::put('loja_estabelecimento', 1);
     Session::put('loja_base', 'spcommerce_pardal');
@@ -56,7 +53,7 @@ if (strpos(request()->getHttpHost(),"tramahome") !== false) {
     Session::put('loja', 'tramahome');
     Session::put('loja_email', 'contatotramahome@gmail.com');
     Session::put('loja_cep', '25730745');
-    Session::put('loja_transportadora', ['Correios', 'JadLog']);
+    Session::put('loja_transportadora', ['Correios']);
     Session::put('loja_whatsapp', '24 98815-2465');
     Session::put('loja_base', 'spcommerce_tramahome');
     Session::put('loja_estabelecimento', 1);
@@ -98,6 +95,11 @@ Route::post('/cliente-cadastro-form-grava', [\App\Http\Controllers\Front\Cliente
 # retorno cielo
 Route::any('/retorno-cielo', [\App\Http\Controllers\CieloCheckout::class, 'retorno'])->name('retorno.cielo');
 Route::any('/retorno-pagseguro', [\App\Http\Controllers\PagSeguroController::class, 'retorno'])->name('retorno.pagseguro');
+
+# cep
+Route::post('/cep', [\App\Http\Controllers\Auxiliar::class, 'cep_f'])->name('front.cep');
+Route::post('/salva-endereco', [\App\Http\Controllers\Front\Cliente::class, 'salva_endereco'])->name('front.salva_endereco');
+Route::get('/troca-endereco', [\App\Http\Controllers\Front\Cliente::class, 'troca_endereco'])->name('front.troca_endereco');
 
 
 Auth::routes();

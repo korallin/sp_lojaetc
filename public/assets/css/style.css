@@ -4611,7 +4611,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 @media only screen and (max-width: 479px) {
   .your-order-wrapper {
-    margin-top: 60px;
+    margin-top: 15px;
   }
 }
 

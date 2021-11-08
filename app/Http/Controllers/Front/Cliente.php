@@ -15,7 +15,7 @@ class Cliente extends Controller
 
     public function exc(Request $request, $produto, $detalhe)
     {
-        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_COOKIE['lojaetc_id'], 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
+        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId(), 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
         return redirect()->route('front.carrinho');
     }
 
@@ -100,9 +100,9 @@ class Cliente extends Controller
             where a.CdCliente = ?
         ', [$valida_cliente->CdCliente]);
 
-        $cart = \App\Models\ProdutoTemp::where('NuSessao', $_COOKIE['lojaetc_id'])->get();
+        $cart = \App\Models\ProdutoTemp::where('NuSessao', session()->getId())->get();
         foreach ($cart as $aj){
-            $ajcart = \App\Models\ProdutoTemp::where('NuSessao', $_COOKIE['lojaetc_id'])->where('CdTemp', $aj->CdTemp)->where('CdProduto', $aj->CdProduto)->first();
+            $ajcart = \App\Models\ProdutoTemp::where('NuSessao', session()->getId())->where('CdTemp', $aj->CdTemp)->where('CdProduto', $aj->CdProduto)->first();
             $ajcart->CdCliente = $valida_cliente->CdCliente;
             $ajcart->DtAtualizacao = date('Y-m-d H:i:s');
             $ajcart->save();
@@ -194,6 +194,46 @@ class Cliente extends Controller
 
         return \redirect()->route('front.cadastro_form');
 
+    }
+
+    public function salva_endereco(Request $request)
+    {
+
+        $cliente = Session::get('cliente')[0];
+
+        $dados['pessoa_endereco'] = new \App\Models\ClienteEndereco();
+        $dados['pessoa_endereco']->CdCliente = $cliente->CdCliente;
+        $dados['pessoa_endereco']->NmTipoEndereco = $request->NmTipoEndereco;
+        $dados['pessoa_endereco']->NmEndereco = $request->NmEndereco;
+        $dados['pessoa_endereco']->NuEndereco = $request->NuEndereco;
+        $dados['pessoa_endereco']->NmComplemento = $request->NmComplemento;
+        $dados['pessoa_endereco']->NmBairro = $request->NmBairro;
+        $dados['pessoa_endereco']->NmCidade = $request->NmCidade;
+        $dados['pessoa_endereco']->SgEstado = $request->SgEstado;
+        $dados['pessoa_endereco']->NuCep = \App\Http\Controllers\Auxiliar::l_int($request->NuCep);
+        $dados['pessoa_endereco']->DtCadastro = date('Y-m-d H:i:s');
+        //$dados['pessoa_endereco']->id_endereco = $request->CdCepCep;
+        //$dados['pessoa_endereco']->id_bairro = $request->CdCepBairro;
+        //$dados['pessoa_endereco']->id_cidade = $request->CdCepCidade;
+        //$dados['pessoa_endereco']->id_uf = $request->CdCepUf;
+        $dados['pessoa_endereco']->save();
+
+        return \redirect()->route('front.checkout');
+    }
+
+    public function troca_endereco(Request $request)
+    {
+
+        $cliente = Session::get('cliente')[0];
+
+        $cliente_endereco = DB::connection('mysql_loja')->select('
+            select * from cliente_endereco a
+            where a.CdCliente = ? and CdEndereco = ?
+        ', [$cliente->CdCliente, $request->endereco]);
+
+        Session::put('cliente_endereco', $cliente_endereco);
+
+        return \redirect()->route('front.checkout');
     }
 
     public function cadastro_form(Request $request)

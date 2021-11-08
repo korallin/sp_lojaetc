@@ -12,7 +12,7 @@
 
                     <ul class="breadcrumb-list">
                         <li class="breadcrumb-item"><a href="{{ route('front.home') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Fechando a Compra</li>
+                        <li class="breadcrumb-item active">Fechando Compra</li>
                     </ul>
                     <!-- breadcrumb-list end -->
                 </div>
@@ -21,13 +21,7 @@
     </div>
     <!-- breadcrumb-area end -->
 
-    @if(!\Illuminate\Support\Facades\Session::has('login_status') and \Illuminate\Support\Facades\Session::get('login_status') != 0)
 
-    @else
-        <form action="{{ route('front.valida_venda') }}" method="post">
-            @csrf
-            @method('post')
-    @endif
 
     <!-- main-content-wrap start -->
     <div class="main-content-wrap section-ptb checkout-page">
@@ -87,12 +81,89 @@
                                                         <p class="mb-0">E-mail: {{ \Illuminate\Support\Facades\Session::get('cliente')[0]->NmEmail }}</p>
                                                     </div>
 
-                                                    <h3>Entrega</h3>
+                                                    <h3 data-collapse-summary="" aria-expanded="true" class="open">Entrega</h3>
                                                     <div class="payment-content">
                                                         <p class="mb-0">{{ \Illuminate\Support\Facades\Session::get('cliente')[0]->NmCliente }}</p>
                                                         <p class="mb-0"> {{ \Illuminate\Support\Facades\Session::get('cliente_endereco')[0]->NmEndereco }}, {{ \Illuminate\Support\Facades\Session::get('cliente_endereco')[0]->NuEndereco }} {{ \Illuminate\Support\Facades\Session::get('cliente_endereco')[0]->NmComplemento }}</p>
                                                         <p class="mb-0">{{ \Illuminate\Support\Facades\Session::get('cliente_endereco')[0]->NmBairro }} / {{ \Illuminate\Support\Facades\Session::get('cliente_endereco')[0]->NmCidade }} / {{ \Illuminate\Support\Facades\Session::get('cliente_endereco')[0]->SgEstado }}</p>
+
+                                                        @if(\Illuminate\Support\Facades\Session::get('enderecos')->count() > 1)
+                                                        <button class="btn btn-info mt-2 ml-3" onclick="$('.lista-enderecos').toggle()">Mudar Endereço</button>
+                                                        @endif
+                                                        <button class="btn btn-info mt-2 ml-3" onclick="$('.novo-endereco').toggle()">Adicionar Novo</button>
+
+                                                        <div class="lista-enderecos mt-2 ml-3" id="novo-endereco" STYLE="display: none;">
+
+                                                            @foreach(\Illuminate\Support\Facades\Session::get('enderecos') as $endereco)
+                                                                <div class="mt-3 table-striped bg-light p-2 border rounded-2">
+                                                                    <p class="mb-0">{{ $endereco->NmTipoEndereco }}</p>
+                                                                    <p class="mb-0"> {{ $endereco->NmEndereco }}, {{ $endereco->NuEndereco }} {{ $endereco->NmComplemento }}</p>
+                                                                    <p class="mb-0">{{ $endereco->NmBairro }} / {{ $endereco->NmCidade }} / {{ $endereco->SgEstado }}</p>
+                                                                    <a href="{{ route('front.troca_endereco', ['endereco' => $endereco->CdEndereco]) }}" class="btn btn-outline-info btn-sm mt-2 ml-3">Selecionar</a>
+                                                                </div>
+                                                            @endforeach
+
+
+                                                        </div>
+
+
+                                                        <div class="novo-endereco mt-2 ml-3" id="novo-endereco" STYLE="display: none;">
+                                                            <form action="{{ route('front.salva_endereco') }}" method="post">
+                                                                @csrf
+                                                                @method('post')
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-4">
+                                                                        <label class="control-label" for="NmTipoEndereco">Nome do Endereço</label>
+                                                                        <input type="text" name="NmTipoEndereco" value="" required="required" class="form-control input-lg" id="NmTipoEndereco" placeholder="Casa, loja">
+                                                                    </div>
+                                                                    <div class="form-group col-md-3">
+                                                                        <label class="control-label" for="NuCep">CEP</label>
+                                                                        <input type="text" name="NuCep" value="" required="required" class="form-control input-lg cep" id="NuCep">
+                                                                    </div>
+
+
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label class="control-label" for="NmEndereco">Endereço</label>
+                                                                        <input type="text" name="NmEndereco" readonly="readonly" value="" required="required" class="form-control input-lg " id="NmEndereco">
+                                                                    </div>
+                                                                    <div class="form-group col-md-2">
+                                                                        <label class="control-label" for="NuEndereco">Número</label>
+                                                                        <input type="text" name="NuEndereco" value="" required="required" class="form-control input-lg" id="NuEndereco">
+                                                                    </div>
+                                                                    <div class="form-group col-md-4">
+                                                                        <label class="control-label" for="NmComplemento">Complemento</label>
+                                                                        <input type="text" name="NmComplemento" size="14" maxlength="100" value="" class="form-control input-lg" id="NmComplemento">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="form-group col-md-4">
+                                                                        <label class="control-label" for="NmBairro">Bairro</label>
+                                                                        <input type="text" name="NmBairro" readonly="readonly" value="" required="required" class="form-control input-lg" id="NmBairro">
+                                                                    </div>
+                                                                    <div class="form-group col-md-4">
+                                                                        <label class="control-label" for="NmCidade">Cidade</label>
+                                                                        <input type="text" name="NmCidade" readonly="readonly" value="" required="required" class="form-control input-lg" id="NmCidade">
+                                                                    </div>
+                                                                    <div class="form-group col-md-4">
+                                                                        <label class="control-label" for="SgEstado">Estado</label>
+                                                                        <input type="text" name="SgEstado" readonly="readonly" value="" required="required" class="form-control input-lg" id="SgEstado">
+                                                                    </div>
+                                                                </div>
+
+                                                                <button type="submit" class="btn btn-info mt-2 ml-3">Salvar Endereço</button>
+
+                                                            </form>
+
+                                                        </div>
+
                                                     </div>
+
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -107,6 +178,17 @@
                     </div>
                 </div>
             </div>
+
+
+
+            @if(!\Illuminate\Support\Facades\Session::has('login_status') and \Illuminate\Support\Facades\Session::get('login_status') != 0)
+
+            @else
+                <form action="{{ route('front.valida_venda') }}" method="post">
+                @csrf
+                @method('post')
+                @endif
+
             <!-- checkout-details-wrapper start -->
             <div class="checkout-details-wrapper">
                 <div class="row">
@@ -130,7 +212,7 @@
                                         @foreach(\Illuminate\Support\Facades\Session::get('carrinho') as $item)
                                         <tr class="cart_item">
                                             <td class="product-name text-left">
-                                                #{{ $item->NmProduto }}
+                                                #<a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="">{{ $item->NmProduto }}</a>
                                             </td>
                                             <td class="product-total text-right">
                                                 <strong class="product-quantity"> × {{$item->QtProduto}}</strong> <span class="amount">R$ {{ number_format(($item->VlPreco*$item->QtProduto), 2, ',', '.') }}</span>
@@ -143,51 +225,65 @@
                                             <th class=" text-right">Subtotal</th>
                                             <th class="text-right"><span class="amount">R$ {{ number_format(\Illuminate\Support\Facades\Session::get('carrinho_total'), 2, ',', '.') }}</span></th>
                                         </tr>
-                                        <tr class="shipping">
-                                            <th class="text-right">Entrega</th>
-                                            <td colspan="2" class="text-left pl-5">
-                                                <ul class="text-left pl-2">
-                                                    @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $item)
-                                                    <li>
-                                                        <input type="radio" name="frete" value="{{$item['carrier']}}">
-                                                        <label>
-                                                            {{$item['carrier']}} <span class="amount font-weight-bold">R$ {{ number_format(($item['price']), 2, ',', '.') }}</span>
-                                                            <br> Prazo estimado <span class="amount font-weight-bold">{{$item['deliveryTime']}}</span> dias úteis.
-                                                        </label>
-                                                    </li>
-                                                    @endforeach
-                                                </ul>
-                                            </td>
-                                        </tr>
 
                                         </tfoot>
                                     </table>
                                 </div>
                                 <!-- your-order-table end -->
 
+                                <div class="payment-method">
+                                    <h4 class="font-weight-bold">Entrega</h4>
+                                    <p class="subsctibe-title">Selecione sua forma de entrega, fique atento aos prazos e valores</p>
+                                    @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $item)
+
+                                        <div class="mt-2 bg-light border pl-3">
+                                            <div class="form-check ml-4">
+                                                <div class="d-flex align-items-center">
+                                                    <input class="form-check-input text-info" style="width: 30px; height: 30px;" required type="radio" name="frete" id="frete{{$item['carrier']}}" value="{{$item['carrier']}}">
+
+                                                    <label class="form-check-label" for="frete{{$item['carrier']}}">
+                                                        <h4 class="mb-0 mt-2 text-info font-weight-bold">{{ ($item['carrier'] != 'Correios' ? 'Transportadora '.$item['carrier'] : $item['carrier_description']) }}<br></h4>
+                                                        <b>R$ {{ number_format(($item['price']), 2, ',', '.') }}</b> Prazo estimado <span class="amount font-weight-bold">{{$item['deliveryTime']}}</span> dias úteis.
+                                                    </label>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    @endforeach
+
+                                </div>
+
                                 <!-- your-order-wrap end -->
                                 <div class="payment-method">
+                                    <h4 class="font-weight-bold">Pagamento</h4>
+                                    <p class="subsctibe-title">Selecione sua forma de pagamento</p>
                                     @foreach(\Illuminate\Support\Facades\Session::get('carrinho_pagamento') as $item)
-                                    <div class="payment-accordion">
-                                        <!-- ACCORDION START -->
-                                        <h3>{{$item->NmPagamento}}</h3>
-                                        <div class="payment-content">
 
-                                            <div class="form-check ml-5">
-                                                <input class="form-check-input" type="radio" name="pagamento" id="pagamento{{$item->CdPagamento}}" value="{{$item->CdPagamento}}">
-                                                <label class="form-check-label" for="pagamento{{$item->CdPagamento}}">
-                                                    {{$item->NmPagamento}}
-                                                </label>
+
+                                        <div class="mt-2 bg-light border pl-3">
+                                            <div class="form-check ml-4">
+                                                <div class="d-flex align-items-center">
+                                                    <input class="form-check-input text-info mr-5" style="width: 30px; height: 30px;" required type="radio" required name="pagamento" id="pagamento{{$item->CdPagamento}}" value="{{$item->CdPagamento}}">
+
+                                                    <label class="form-check-label" for="pagamento{{$item->CdPagamento}}">
+                                                        <h4 class="mb-0 mt-2 text-primary font-weight-bold">{{$item->NmPagamento}}</h4>
+                                                        <p class="mb-0 small text-muted pr-5">{{ $item->TxPagamento }}</p>
+                                                        <select class="form-control" name="parcelas">
+                                                            <option value="1">Selecione seu parcelamento</option>
+                                                            @for($i=1;$i<=$item->NuParcelaMaximo;$i++)
+                                                                <option value="{{ $i }}"> {{ $i }} X de R$ {{ number_format((\Illuminate\Support\Facades\Session::get('carrinho_total')/$i), 2, ',', '.') }} </option>
+                                                            @endfor
+                                                        </select>
+
+                                                    </label>
+
+
+                                                </div>
                                             </div>
-                                            <p>Parcelas:
-                                                <select class="form-control" name="parcelas">
-                                                    @for($i=1;$i<=$item->NuParcelaMaximo;$i++)
-                                                        <option value="{{ $i }}"> {{ $i }} X de R$ {{ number_format((\Illuminate\Support\Facades\Session::get('carrinho_total')/$i), 2, ',', '.') }} </option>
-                                                    @endfor
-                                                </select>
-                                            </p>
                                         </div>
-                                    </div>
+
                                     @endforeach
 
                                     <div class="order-button-payment">
@@ -215,4 +311,58 @@
 @endsection
 
 @section('js')
+
+    <script src="/assets/js/jquery.mask.min.js" type="text/javascript"></script>
+
+    <script>
+
+        $('.cep').mask('00.000-000');
+        $('.telefone').mask('(00) 0000-0000');
+        $('.celular').mask('(00) 0 0000-0000');
+        $('.cpf').mask('000.000.000-00');
+
+        $( "input[name=NuCep]" ).focusout(function(){
+            var w_cep = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: '{{ route('front.cep') }}',
+                data: {cep:w_cep, _token: '{{ @csrf_token() }}', tipoProcesso:'enderecoCep' },
+                success: function( data ) {
+                    $('#AjaxCarregaProcesso').html(data);
+
+                    const obj = JSON.parse(data);
+
+                    console.log(obj);
+
+                    if(data){
+                        $("input[name=NmEndereco]").val(obj.nome);
+                        $("input[name=NmBairro]").val(obj.bairro);
+                        $("input[name=NmCidade]").val(obj.cidade);
+                        $("input[name=SgEstado]").val(obj.uf);
+                        $("input[name=CdCepCep]").val(obj.w_cep);
+                        $("input[name=CdCepBairro]").val(obj.id_bairro);
+                        $("input[name=CdCepCidade]").val(obj.id_cidade);
+                        $("input[name=CdCepUf]").val(obj.uf);
+                        $("input[name=NuEndereco]").focus();
+
+                    } else {
+                        $('#msgCep').show();
+                        $('#msgCepmsg').text($("input[name=wMensagem]").val());
+                        $("input[name=NmEndereco]").val('');
+                        $("input[name=NmBairro]").val('');
+                        $("input[name=NmCidade]").val('');
+                        $("input[name=SgEstado]").val('');
+                        $("input[name=NuCep]").val('');
+                        $("input[name=CdCepCep]").val('');
+                        $("input[name=CdCepBairro]").val('');
+                        $("input[name=CdCepCidade]").val('');
+                        $("input[name=CdCepUf]").val('');
+                        $("input[name=NuCep]").focus();
+                    }
+                }
+            });
+        });
+
+    </script>
+
 @endsection

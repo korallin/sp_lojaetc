@@ -17,6 +17,8 @@ class Controller extends BaseController
     public function __construct()
     {
 
+
+
         $departamentos = DB::connection('mysql_loja')->select('
 
             select 	GX.CdDepartamento, GR.CdDepartamento, GR.CdDepartamentoPai, GR.NmDepartamento as nome_departamento, SG.NmDepartamento,
@@ -93,7 +95,7 @@ class Controller extends BaseController
             and PT.NuSessao = ?
         group by PT.CdProduto, PT.CdDetalhe
         order by PT.CdTemp;
-        ', [Session::get('loja_estabelecimento'), $_COOKIE['lojaetc_id']]);
+        ', [Session::get('loja_estabelecimento'), session()->getId()]);
 
         $total = 0;
         $itens = 0;

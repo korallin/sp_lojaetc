@@ -97,6 +97,8 @@ class CieloCheckout extends Controller
     public function retorno(Request $request)
     {
 
+        dd($request);
+
         $dados = $request->all();
         $dados = json_encode($dados, true);
         file_put_contents($dados, storage_path('app/public/cielo_retorno/'.date('U').'.json'));

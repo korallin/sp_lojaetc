@@ -99,7 +99,15 @@ class CieloCheckout extends Controller
     public function retorno(Request $request)
     {
 
-        dd($request);
+        if(isset($request->retorno_recibo)){
+
+            return redirect()->route('front.recibo', ['dados' => $request->all()]);
+        }
+        //dd($request);
+    }
+
+    public function retorno_webhook(Request $request)
+    {
 
         $dados = $request->all();
         $dados = json_encode($dados, true);

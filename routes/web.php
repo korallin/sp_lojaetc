@@ -36,7 +36,7 @@ if (strpos(request()->getHttpHost(),"pardal") !== false) {
     /*
 
      #cielo
-     033.271.427-69
+     03327142769
      senha:219010
      */
 
@@ -104,6 +104,7 @@ Route::post('/cliente-cadastro-form-grava', [\App\Http\Controllers\Front\Cliente
 //apis
 # retorno cielo
 Route::any('/retorno-cielo', [\App\Http\Controllers\CieloCheckout::class, 'retorno'])->name('retorno.cielo');
+Route::any('/retorno-cielo-retorno_webhook', [\App\Http\Controllers\CieloCheckout::class, 'retorno_webhook'])->name('retorno.cielowebhook');
 Route::any('/retorno-pagseguro', [\App\Http\Controllers\PagSeguroController::class, 'retorno'])->name('retorno.pagseguro');
 
 # cep

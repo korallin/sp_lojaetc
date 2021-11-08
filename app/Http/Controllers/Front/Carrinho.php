@@ -202,7 +202,11 @@ class Carrinho extends Controller
     public function recibo(Request $request)
     {
         $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId()))->delete();
-        $dados['retorno_id'] = $request->retorno_recibo;
+        if(!$request->retorno_recibo){
+            $dados['retorno_id'] = 'Em processamento';
+        } else {
+            $dados['retorno_id'] = $request->retorno_recibo;
+        }
         $dados['espelho'] = Session::get('espelho');
 
 

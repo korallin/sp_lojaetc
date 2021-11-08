@@ -15,7 +15,7 @@ class Cliente extends Controller
 
     public function exc(Request $request, $produto, $detalhe)
     {
-        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId(), 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
+        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => Session::get('loja_sessao'), 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
         return redirect()->route('front.carrinho');
     }
 
@@ -100,9 +100,9 @@ class Cliente extends Controller
             where a.CdCliente = ?
         ', [$valida_cliente->CdCliente]);
 
-        $cart = \App\Models\ProdutoTemp::where('NuSessao', session()->getId())->get();
+        $cart = \App\Models\ProdutoTemp::where('NuSessao', Session::get('loja_sessao'))->get();
         foreach ($cart as $aj){
-            $ajcart = \App\Models\ProdutoTemp::where('NuSessao', session()->getId())->where('CdTemp', $aj->CdTemp)->where('CdProduto', $aj->CdProduto)->first();
+            $ajcart = \App\Models\ProdutoTemp::where('NuSessao', Session::get('loja_sessao'))->where('CdTemp', $aj->CdTemp)->where('CdProduto', $aj->CdProduto)->first();
             $ajcart->CdCliente = $valida_cliente->CdCliente;
             $ajcart->DtAtualizacao = date('Y-m-d H:i:s');
             $ajcart->save();

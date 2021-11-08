@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-
-
 if (strpos(request()->getHttpHost(),"pardal") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_pardal']);
     Session::put('loja', 'pardal');

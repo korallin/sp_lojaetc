@@ -17,7 +17,7 @@ class Controller extends BaseController
     public function __construct()
     {
 
-
+        dump(\session()->getId());
 
         $departamentos = DB::connection('mysql_loja')->select('
 
@@ -95,7 +95,7 @@ class Controller extends BaseController
             and PT.NuSessao = ?
         group by PT.CdProduto, PT.CdDetalhe
         order by PT.CdTemp;
-        ', [Session::get('loja_estabelecimento'), session()->getId()]);
+        ', [Session::get('loja_estabelecimento'), Session::get('loja_sessao')]);
 
         $total = 0;
         $itens = 0;
@@ -113,7 +113,7 @@ class Controller extends BaseController
         $dado_carrinho['cart_itens'] = $itens;
         $dado_carrinho['cart_produtos'] = $produtos;
 
-       // dd(Session::get('loja_estabelecimento'),$_COOKIE, session()->getId(),$dado_carrinho,$produtos_carrinho,session());
+       // dd(Session::get('loja_estabelecimento'),$_COOKIE, Session::get('loja_sessao'),$dado_carrinho,$produtos_carrinho,session());
 
         view()->share(['departamentos' => $departamentos, 'produtos_populares' => $produtos_populares, 'paginas_bl1' => $paginas_bl1, 'paginas_bl2' => $paginas_bl2, 'dado_carrinho' => $dado_carrinho]);
     }

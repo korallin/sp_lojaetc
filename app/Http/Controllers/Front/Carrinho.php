@@ -152,7 +152,7 @@ class Carrinho extends Controller
         left join produto_estoque PE on (PE.CdEstabel = PT.CdEstabel and PE.CdProduto = PT.CdProduto and PE.CdDetalhe = PT.CdDetalhe)
         where PT.CdEstabel = '.Session::get('loja_estabelecimento').'
         and PT.CdMovimento = 9
-        and PT.NuSessao = "'.session()->getId().'"
+        and PT.NuSessao = "'.Session::get('loja_sessao').'"
         order by PT.CdProduto, PT.CdDetalhe, PT.CdTemp)
 
 		');
@@ -201,7 +201,7 @@ class Carrinho extends Controller
 
     public function recibo(Request $request)
     {
-        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId()))->delete();
+        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => Session::get('loja_sessao')))->delete();
         if(!$request->retorno_recibo){
             $dados['retorno_id'] = 'Em processamento';
         } else {
@@ -217,7 +217,7 @@ class Carrinho extends Controller
 
     public function exc(Request $request, $produto, $detalhe)
     {
-        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId(), 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
+        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => Session::get('loja_sessao'), 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
 
         $this->load_cart();
 
@@ -261,11 +261,11 @@ class Carrinho extends Controller
             Session::put(['login' => ['nome' => Session::get('cliente')[0]->NmContato, 'login_id' => Session::get('cliente')[0]->CdCliente]]);
         }
 
-        $cart = \App\Models\ProdutoTemp::firstOrNew(array('NuSessao' => session()->getId(), 'CdProduto' => $request->produto, 'CdDetalhe' => $request->detalhe));
+        $cart = \App\Models\ProdutoTemp::firstOrNew(array('NuSessao' => Session::get('loja_sessao'), 'CdProduto' => $request->produto, 'CdDetalhe' => $request->detalhe));
         $cart->CdMovimento = 9;
         $cart->CdEstabel = Session::get('loja_estabelecimento');
         $cart->CdCliente = Session::get('login')['login_id'];
-        $cart->NuSessao = session()->getId();
+        $cart->NuSessao = Session::get('loja_sessao');
         $cart->CdProduto = $request->produto;
         $cart->CdDetalhe = $request->detalhe;
         $cart->CdReferencia = $prod[0]->CdReferencia;
@@ -288,11 +288,11 @@ class Carrinho extends Controller
 
         foreach ($request->produto as $k => $v){
             if($request->quantidade[$k] == 0){
-                $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId(), 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->delete();
+                $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => Session::get('loja_sessao'), 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->delete();
             } else {
 
             }
-            $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => session()->getId(), 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->first();
+            $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => Session::get('loja_sessao'), 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->first();
             $cart->QtProduto = $request->quantidade[$k];
             $cart->DtAtualizacao = date('Y-m-d H:i:s');
             $cart->save();
@@ -314,6 +314,9 @@ class Carrinho extends Controller
     }
 
     public function load_cart(){
+
+        DB::connection('mysql_loja')->enableQueryLog();
+
         $produtos = DB::connection('mysql_loja')->select('
         select  	PT.CdTemp, PR.CdProduto, PR.CdUnidade, PR.NmProduto, PR.NuNcm, PD.PsProduto,
                     PF.NmFoto,
@@ -331,7 +334,9 @@ class Carrinho extends Controller
             and PT.NuSessao = ?
         group by PT.CdProduto, PT.CdDetalhe
         order by PT.CdTemp;
-        ', [Session::get('loja_estabelecimento'), session()->getId()]);
+        ', [Session::get('loja_estabelecimento'), Session::get('loja_sessao')]);
+
+        dd(DB::connection('mysql_loja')->getQueryLog());
 
         Session::put('carrinho',$produtos);
         $unidade = 0;

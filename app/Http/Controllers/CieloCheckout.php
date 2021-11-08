@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
@@ -90,8 +91,6 @@ class CieloCheckout extends Controller
 
         $response = json_decode($response);
 
-        dd($response);
-
         return $response;
 
     }
@@ -99,23 +98,35 @@ class CieloCheckout extends Controller
     public function retorno(Request $request)
     {
 
-        if(isset($request->retorno_recibo)){
+        return redirect()->route('front.recibo', ['dados' => $request->all()]);
 
-            return redirect()->route('front.recibo', ['dados' => $request->all()]);
-        }
-        //dd($request);
     }
 
     public function retorno_webhook(Request $request)
     {
 
-        $dados = $request->all();
-        $dados = json_encode($dados, true);
+
+        $base = base64_decode($request->body);
+        parse_str($base , $uri );
+        $client = new Client();
+        $response = $client->get($uri['Url']);
+        $response = json_decode((string) $response->getBody(), true);
+        $dados = [];
+        foreach ($response as $k => $v) {
+            $dados[$k] = $v;
+        }
+
+        file_put_contents(storage_path('app/public/cielo_retorno/').$response["order_number"].'-'.date('U').'.json', json_encode($dados));
+
+
+
+        /*
         file_put_contents($dados, storage_path('app/public/cielo_retorno/'.date('U').'.json'));
         if(isset($request->retorno_recibo)){
             return redirect()->route('front.recibo', ['dados' => $request->all()]);
         }
         //dd($request);
+        */
     }
 
 }

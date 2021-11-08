@@ -9,9 +9,6 @@ class CieloCheckout extends Controller
 {
     static public function pedido($dados)
     {
-        define("ESTABELECIMENTO", "xx");
-        define("ENDPOINT", "xx");
-        define("MID", "xx");
 
         $cabecalhos = array();
         $produtos = array();
@@ -98,13 +95,13 @@ class CieloCheckout extends Controller
     public function retorno(Request $request)
     {
         \Facade\Ignition\Http\Requests\ExecuteSolutionRequest::
-        $dados = $request->all();
-        $dados = json_encode($dados, true);
+        //$dados = $request->all();
+        $dados = json_encode($request, true);
         file_put_contents($dados, storage_path('app/public/cielo_retorno/'.date('U').'.json'));
         if(isset($request->retorno_recibo)){
             return redirect()->route('front.recibo', ['dados' => $request->all()]);
         }
-        dd($request);
+        //dd($request);
     }
 
 }

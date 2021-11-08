@@ -32,6 +32,14 @@ if (strpos(request()->getHttpHost(),"pardal") !== false) {
     Session::put('loja_cielo_merchantid', '7d514873-b94e-429f-baa0-d8108f816bc4');
     Session::put('loja_cielo_softdescriptor', 'PARDALTEC');
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/pardal/produto/');
+
+    /*
+
+     #cielo
+     033.271.427-69
+     senha:219010
+     */
+
 }
 
 if (strpos(request()->getHttpHost(),"casaverde") !== false) {
@@ -72,6 +80,8 @@ Route::get('/contato', [\App\Http\Controllers\Front\Paginas::class, 'contato'])-
 
 Route::get('/pagina/{id}/{nome}', [\App\Http\Controllers\Front\Paginas::class, 'paginas'])->name('front.paginas');
 Route::get('/departamento/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'departamento'])->name('front.departamento');
+Route::get('/busca', [\App\Http\Controllers\Front\WebControllerDB::class, 'busca'])->name('front.busca');
+
 Route::get('/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'produto'])->name('front.produto');
 
 Route::get('/carrinho', [\App\Http\Controllers\Front\Carrinho::class, 'lista_carrinho'])->name('front.carrinho');

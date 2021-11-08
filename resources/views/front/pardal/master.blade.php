@@ -116,8 +116,13 @@
 
                                 <li class="drodown-show"><a href="#">Minha Conta <i class="ion-ios-arrow-down"></i></a>
                                     <ul class="open-dropdown">
-                                        <li><a href="{{ route('front.login') }}"> Novo Registro </a></li>
-                                        <li><a href="{{ route('front.login') }}"> Entrar</a></li>
+                                        @if(!\Illuminate\Support\Facades\Session::has('login_status') and \Illuminate\Support\Facades\Session::get('login_status') != 0)
+                                            <li><a href="{{ route('front.login') }}"> Novo Registro </a></li>
+                                            <li><a href="{{ route('front.login') }}"> Entrar</a></li>
+                                        @else
+                                            <li><a href="{{ route('front.cliente_area') }}"> Minha Conta </a></li>
+                                            <li><a href="{{ route('front.cliente_area') }}"> Meus Pedidos </a></li>
+                                        @endif
                                     </ul>
                                 </li>
 
@@ -210,10 +215,12 @@
             <button class="search-close"><span class="icon-close"></span></button>
         </div>
         <div class="sidebar-search-input">
-            <form>
+            <form action="{{ route('front.busca') }}" method="get">
+                @csrf
+                @method('get')
                 <div class="form-search">
-                    <input id="search" class="input-text" value="" placeholder="Busque na loja ..." type="search">
-                    <button class="search-btn" type="button">
+                    <input id="search" name="busca" class="input-text" value="" placeholder="Busque na loja ..." type="search">
+                    <button class="search-btn" type="submit">
                         <i class="icon-magnifier"></i>
                     </button>
                 </div>
@@ -228,9 +235,11 @@
             <button class="search-close"><span class="icon-close"></span></button>
         </div>
         <div class="sidebar-search-input">
-            <form>
+            <form action="{{ route('front.busca') }}" method="get">
+                @csrf
+                @method('get')
                 <div class="form-search">
-                    <input id="search" class="input-text" value="" placeholder="Busque na loja ..." type="search">
+                    <input id="search" class="input-text" name="busca" value="" placeholder="Busque na loja ..." type="search">
                     <button class="search-btn" type="button">
                         <i class="icon-magnifier"></i>
                     </button>

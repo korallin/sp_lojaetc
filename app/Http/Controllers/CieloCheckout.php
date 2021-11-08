@@ -90,6 +90,8 @@ class CieloCheckout extends Controller
 
         $response = json_decode($response);
 
+        dd($response);
+
         return $response;
 
     }

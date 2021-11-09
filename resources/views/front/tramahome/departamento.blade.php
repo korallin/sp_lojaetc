@@ -92,7 +92,7 @@
                                         </a>
                                     </div>
                                     <div class="product-content text-left">
-                                        <h3><a href="product-details.html" class="small">{{ $item->NmProduto }}</a></h3>
+                                        <h3> <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}">{{ $item->NmProduto }}</a></h3>
                                         <div class="price-box">
                                             @if($item->VlPrecoMax > $item->VlPrecoMin)
                                                 <span class="old-price text-danger">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</span>

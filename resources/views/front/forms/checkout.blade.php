@@ -238,7 +238,7 @@
 
                                         <div class="mt-2 bg-light border pl-3">
                                             <div class="form-check ml-4" >
-                                                <div class="d-flex align-items-center" onclick="$('.some').hide(); $('#blo-{{$item['carrier']}}').show();">
+                                                <div class="d-flex align-items-center" onclick="$('.some').hide(); $('.blo-{{$item['carrier']}}').show();">
                                                     <input class="form-check-input text-info" style="width: 30px; height: 30px;" required type="radio" name="frete" id="frete{{$item['carrier']}}" value="{{$item['carrier']}}">
                                                     <label class="form-check-label" for="frete{{$item['carrier']}}">
                                                         <h4 class="mb-0 mt-2 text-info font-weight-bold">{{ ($item['carrier'] != 'Correios' ? 'Transportadora '.$item['carrier'] : $item['carrier_description']) }}<br></h4>
@@ -269,7 +269,7 @@
                                                         <p class="mb-0 small text-muted pr-5">{{ $item->TxPagamento }}</p>
 
                                                         @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $frete)
-                                                            <p id="blo-{{$frete['carrier']}}" class="some" style="display: none;">Em até {{ $item->NuParcelaMaximo }} X
+                                                            <p id="" class="some blo-{{$frete['carrier']}}" style="display: none; max-width: 400px;">Em até {{ $item->NuParcelaMaximo }} X
                                                                 <select class="form-control" name="parcelas">
                                                                     @for($i=1;$i<=$item->NuParcelaMaximo;$i++)
                                                                         <option value="{{ $i }}"> {{ $i }} X de R$ {{ number_format(((\Illuminate\Support\Facades\Session::get('carrinho_total')+$frete['price'])/$i), 2, ',', '.') }} </option>

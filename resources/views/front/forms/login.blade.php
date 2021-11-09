@@ -92,6 +92,7 @@
                                                 </div>
                                                 <div class="button-box">
                                                     <button class="login-btn btn" type="submit"><span>Entrar</span></button>
+                                                    <button class="login-btn btn" type="submit"><span>Novo Cadastro</span></button>
                                                 </div>
                                             </div>
                                         </form>

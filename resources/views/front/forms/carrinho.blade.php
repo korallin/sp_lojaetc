@@ -90,7 +90,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 mr-5">
                                             <div class="cart-page-total">
                                                 <h2>Simule seu frete</h2>
                                                 <div class="input-group mb-3">

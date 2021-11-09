@@ -1347,7 +1347,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 /*---- Breadcrumb One ----*/
 
 .breadcrumb-area {
-  background: );url(../images/breadcrumb1.jpg
+  background: url(../images/breadcrumb1.jpg);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

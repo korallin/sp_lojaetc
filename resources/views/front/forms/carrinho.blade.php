@@ -148,7 +148,7 @@
                 url: '{{ route('front.cep') }}',
                 data: {cep:w_cep, _token: '{{ @csrf_token() }}', tipoProcesso:'enderecoCep' },
                 success: function( data ) {
-                    $('.btenviar').html('<i class="fas fa-sync fa-spin"></i>');
+                    $('.btenviar').html('Aguarde ...');
 
                     const obj = JSON.parse(data);
 

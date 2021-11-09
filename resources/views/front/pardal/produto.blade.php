@@ -83,9 +83,6 @@
                             <div class="pro_dtl_size">
                                 <h2 class="title_2">Escolha a variação</h2>
                             @foreach($produto_detalhe as $pd)
-
-
-
                                     <div class="form-check" style="padding-left: 25px;">
                                         <input class="form-check-input" type="radio" name="detalhe" id="detalhe_{{$pd->CdDetalhe}}" value="{{$pd->CdDetalhe}}" required>
                                         <label class="form-check-label" style="padding-left: 0.25rem;" for="detalhe_{{$pd->CdDetalhe}}">
@@ -110,7 +107,7 @@
 
                                 </ul>
 
-                                <input type="hidden" name="detalhe" value="{{$item->CdDetalhe}}">
+                                <input type="hidden" name="detalhe" value="{{$produto_detalhe[0]->CdDetalhe}}">
 
                         @endif
 

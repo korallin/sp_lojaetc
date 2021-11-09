@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -14,8 +15,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+
+
+        //dump($_SESSION['lojaetc_id'],session()->getId());
 
         $departamentos = DB::connection('mysql_loja')->select('
 
@@ -93,7 +97,7 @@ class Controller extends BaseController
             and PT.NuSessao = ?
         group by PT.CdProduto, PT.CdDetalhe
         order by PT.CdTemp;
-        ', [Session::get('loja_estabelecimento'), $_COOKIE['lojaetc_id']]);
+        ', [Session::get('loja_estabelecimento'), $_SESSION['lojaetc_id']]);
 
         $total = 0;
         $itens = 0;

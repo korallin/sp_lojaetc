@@ -124,6 +124,65 @@ class WebControllerDB extends Controller
 
     }
 
+    public function busca(Request $request)
+    {
+
+
+        //dd($request);
+
+        $produtos = DB::connection('mysql_loja')->select('
+
+        select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
+			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
+			PF.NmFoto,
+			if(PF.NmFoto is null, 0,1) as StFoto
+        from produto PR
+        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
+        join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
+        join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
+        join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
+        left join produto_foto PF on (PF.CdProduto = PR.CdProduto and PF.StPrincipal = 1)
+
+        join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
+        join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
+        left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
+
+        where PR.DtDesativacao is null
+        and PP.CdTabela in (?)
+        and (PR.NmProduto like "%'.$request->busca.'%" OR PR.TxProduto like "%'.$request->busca.'%")
+
+        group by PR.CdProduto
+        order by
+                 '.(isset($request->ordem) ? (
+            $request->ordem == 'A' ?  'PR.NmProduto ASC' : (
+            $request->ordem == 'Z' ?  'PR.NmProduto DESC' : (
+            $request->ordem == '0' ?  'min(PP.VlPreco) ASC' : (
+            $request->ordem == '9' ?  'min(PP.VlPreco) DESC' : (
+            "StFoto desc, PR.DtAtualizacao desc, rand()"
+            )
+            )
+            )
+            )
+            ) : "StFoto desc, PR.DtAtualizacao desc, rand()").'
+
+
+        ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'), $request->busca, $request->busca]);
+
+
+
+
+
+
+        $view = 'front.'.Session::get('loja').'.busca';
+
+        //$paginacao = $this->arrayPaginator($produtos, $request);
+
+        //dd($paginacao);
+
+        return view($view, ['produtos' => $produtos, 'request' => $request]);
+
+    }
+
     public function produto(Request $request, $id,$nome)
     {
 

@@ -11,8 +11,9 @@ class Paginas extends Controller
 {
     public function contato()
     {
+        $estabel = \App\Models\Estabelecimento::first();
         $view = 'front.'.Session::get('loja').'.contato';
-        return view($view);
+        return view($view, ['estabel' => $estabel]);
     }
 
     public function paginas(Request $request, $id, $nome)

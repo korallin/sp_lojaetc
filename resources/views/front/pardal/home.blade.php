@@ -120,7 +120,7 @@
                     <div class="testimonial-slider">
                         <div class="testimonial-inner text-center">
                             <figure class="testimonial">
-                                <blockquote>Temos um grande orgulho de trazer essa nova loja para nossos clientes, proporcionando total comdidade e segurança em suas compras, fique tranquilx, levamos tudo até você.
+                                <blockquote>Temos um grande orgulho de trazer essa nova loja para nossos clientes, proporcionando total comodidade e segurança em suas compras, fique tranquilo, levamos tudo até você.
                                     <div class="arrow"></div>
                                 </blockquote>
                                 <img src="/assets/images/client4.jpg" alt="client4" />

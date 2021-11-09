@@ -26,42 +26,34 @@ class Carrinho extends Controller
         $quote = $api->shipping()->quote()
             ->setRecipientCountry('BR')
             ->setSellerPostcode(Session::get('loja_cep'))
-            ->setRecipientPostcode(Session::get('cliente_endereco')[0]->NuCep)
+            ->setRecipientPostcode(\App\Http\Controllers\Auxiliar::l_int(Session::get('cliente_endereco')[0]->NuCep))
             ->setShipmentInvoiceValue(Session::get('carrinho_total'));
 
         foreach (Session::get('carrinho') as $item){
-            if(!isset($item->PsProduto) || $item->PsProduto == '' || $item->PsProduto < 0.300) $peso = 0.300;
-            if(!isset($item->largura) || $item->largura == '') $largura = 20;
-            if(!isset($item->altura) || $item->altura == '') $altura = 20;
-            if(!isset($item->profundidade) || $item->profundidade == '') $profundidade = 20;
-            $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $peso, $largura, $altura, $profundidade, 'Accessories');
+            if(!isset($item->PsProduto) || $item->PsProduto == '' || $item->PsProduto < 0.300) $item->PsProduto = 0.300;
+            if(!isset($item->largura) || $item->largura == '') $item->largura = 20;
+            if(!isset($item->altura) || $item->altura == '') $item->altura = 20;
+            if(!isset($item->profundidade) || $item->profundidade == '') $item->profundidade = 20;
+            $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $item->PsProduto, $item->largura, $item->altura, $item->profundidade, 'Accessories');
         }
-        /**
-         * The method `execute()` sends the request and parse the body result to a object type.
-         *
-         * @var \Frenet\ObjectType\Entity\Shipping\QuoteInterface $result
-         */
         $result = $quote_itens->execute();
         $services = $result->getShippingServices();
-
-        //dd($services);
-
-
-        /** @var Frenet\ObjectType\Entity\Shipping\Quote\ServiceInterface $service */
         $dados['frete'] = [];
         $cc = 0;
         foreach ($services as $service) {
 
             if(!$service->isError()){
-                $dados['frete'][$service->getCarrier()]['price']        = $service->getShippingPrice();
-                $dados['frete'][$service->getCarrier()]['carrier']      = $service->getCarrier();
-                $dados['frete'][$service->getCarrier()]['carrier_description']      = $service->getServiceDescription();
-                $dados['frete'][$service->getCarrier()]['deliveryTime'] = $service->getDeliveryTime();
-                $dados['frete'][$service->getCarrier()]['responseTime'] = $service->getResponseTime();
+
+                if(in_array($service->getCarrier(), Session::get('loja_transportadora'), false)) {
+                    $dados['frete'][$service->getCarrier()]['price'] = $service->getShippingPrice();
+                    $dados['frete'][$service->getCarrier()]['carrier'] = $service->getCarrier();
+                    $dados['frete'][$service->getCarrier()]['carrier_description'] = $service->getServiceDescription();
+                    $dados['frete'][$service->getCarrier()]['deliveryTime'] = $service->getDeliveryTime();
+                    $dados['frete'][$service->getCarrier()]['responseTime'] = $service->getResponseTime();
+                }
                 $cc++;
             }
 
-            /** Do anything you want with this quotation. */
         }
 
         Session::put('carrinho_entrega', $dados['frete']);
@@ -77,6 +69,11 @@ class Carrinho extends Controller
         ', [Session::get('carrinho_total')]);
 
         Session::put('carrinho_pagamento', $pagamento);
+
+        $enderecos = \App\Models\ClienteEndereco::where('CdCliente', Session::get('cliente')[0]->CdCliente)->get();
+        $enderecos_total = \App\Models\ClienteEndereco::where('CdCliente', Session::get('cliente')[0]->CdCliente)->count();
+        Session::put('enderecos', $enderecos);
+        Session::put('enderecos_total', $enderecos_total);
 
         $view = 'front.forms.checkout';
         return view($view);
@@ -142,7 +139,7 @@ class Carrinho extends Controller
         left join produto_estoque PE on (PE.CdEstabel = PT.CdEstabel and PE.CdProduto = PT.CdProduto and PE.CdDetalhe = PT.CdDetalhe)
         where PT.CdEstabel = '.Session::get('loja_estabelecimento').'
         and PT.CdMovimento = 9
-        and PT.NuSessao = "'.$_COOKIE['lojaetc_id'].'"
+        and PT.NuSessao = "'.$_SESSION['lojaetc_id'].'"
         order by PT.CdProduto, PT.CdDetalhe, PT.CdTemp)
 
 		');
@@ -191,7 +188,7 @@ class Carrinho extends Controller
 
     public function recibo(Request $request)
     {
-        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_COOKIE['lojaetc_id']))->delete();
+        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id']))->delete();
         $dados['retorno_id'] = $request->retorno_recibo;
         $dados['espelho'] = Session::get('espelho');
 
@@ -203,7 +200,7 @@ class Carrinho extends Controller
 
     public function exc(Request $request, $produto, $detalhe)
     {
-        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_COOKIE['lojaetc_id'], 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
+        $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id'], 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
 
         $this->load_cart();
 
@@ -247,11 +244,11 @@ class Carrinho extends Controller
             Session::put(['login' => ['nome' => Session::get('cliente')[0]->NmContato, 'login_id' => Session::get('cliente')[0]->CdCliente]]);
         }
 
-        $cart = \App\Models\ProdutoTemp::firstOrNew(array('NuSessao' => $_COOKIE['lojaetc_id'], 'CdProduto' => $request->produto, 'CdDetalhe' => $request->detalhe));
+        $cart = \App\Models\ProdutoTemp::firstOrNew(array('NuSessao' => $_SESSION['lojaetc_id'], 'CdProduto' => $request->produto, 'CdDetalhe' => $request->detalhe));
         $cart->CdMovimento = 9;
         $cart->CdEstabel = Session::get('loja_estabelecimento');
         $cart->CdCliente = Session::get('login')['login_id'];
-        $cart->NuSessao = $_COOKIE['lojaetc_id'];
+        $cart->NuSessao = $_SESSION['lojaetc_id'];
         $cart->CdProduto = $request->produto;
         $cart->CdDetalhe = $request->detalhe;
         $cart->CdReferencia = $prod[0]->CdReferencia;
@@ -274,11 +271,11 @@ class Carrinho extends Controller
 
         foreach ($request->produto as $k => $v){
             if($request->quantidade[$k] == 0){
-                $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_COOKIE['lojaetc_id'], 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->delete();
+                $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id'], 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->delete();
             } else {
 
             }
-            $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_COOKIE['lojaetc_id'], 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->first();
+            $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id'], 'CdProduto' => $request->produto[$k], 'CdDetalhe' => $request->detalhe[$k]))->first();
             $cart->QtProduto = $request->quantidade[$k];
             $cart->DtAtualizacao = date('Y-m-d H:i:s');
             $cart->save();
@@ -317,7 +314,7 @@ class Carrinho extends Controller
             and PT.NuSessao = ?
         group by PT.CdProduto, PT.CdDetalhe
         order by PT.CdTemp;
-        ', [Session::get('loja_estabelecimento'), $_COOKIE['lojaetc_id']]);
+        ', [Session::get('loja_estabelecimento'), $_SESSION['lojaetc_id']]);
 
         Session::put('carrinho',$produtos);
         $unidade = 0;

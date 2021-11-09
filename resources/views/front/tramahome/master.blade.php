@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html class="no-js" lang="pt-br">
 <head>
@@ -108,15 +109,20 @@
                         <div class="language-currency-wrapper">
                             <ul>
 
-                                <li class="drodown-show"><a href="https://twitter.com/Pardaltec" target="_blank"><i class="ion-social-twitter"></i></a></li>
-                                <li class="drodown-show"><a href="https://www.youtube.com/channel/UCEOsKJlaL6Ir1i9oeE0WNDw" target="_blank"><i class="ion-social-youtube"></i></a></li>
-                                <li class="drodown-show"><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-facebook"></i></a></li>
-                                <li class="drodown-show"><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
+                                <li class="drodown-show"><a href="https://www.instagram.com/trama.home" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
 
                                 <li class="drodown-show"><a href="#">Minha Conta <i class="ion-ios-arrow-down"></i></a>
-                                    <ul class="open-dropdown">
-                                        <li><a href="{{ route('front.login') }}"> Novo Registro </a></li>
-                                        <li><a href="{{ route('front.login') }}"> Entrar</a></li>
+                                    <ul class="open-dropdown" style="min-width: 200px;">
+
+                                        @if(\Illuminate\Support\Facades\Session::get('login_status') > 0)
+                                            <li><a href="{{ route('front.cliente_area') }}"> Minha Conta </a></li>
+                                            <li><a href="{{ route('front.cliente_area') }}"> Meus Pedidos </a></li>
+                                            <li><a href="{{ route('front.logout') }}" >Sair</a></li>
+                                        @else
+                                            <li><a href="{{ route('front.login') }}"> Novo Registro </a></li>
+                                            <li><a href="{{ route('front.login') }}"> Entrar</a></li>
+
+                                        @endif
                                     </ul>
                                 </li>
 
@@ -145,7 +151,7 @@
                                     <li><a href="#">Produtos</a>
                                         <ul class="mega-menu">
                                             @foreach($departamentos as $dep)
-                                            <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+                                            <li class="p-2"><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
                                             @endforeach
                                         </ul>
                                     </li>
@@ -161,7 +167,13 @@
                             </div>
 
                             <div class="user-wrap">
-                                <a href="{{ route('front.login') }}"><i class="icon-user"></i></a>
+                                @if(\Illuminate\Support\Facades\Session::get('login_status') > 0)
+                                    <a href="{{ route('front.cliente_area') }}"><i class="icon-user"></i></a>
+                                @else
+
+                                    <a href="{{ route('front.login') }}"><i class="icon-user"></i></a>
+                                @endif
+
                             </div>
 
                             <div class="shopping-cart-wrap">
@@ -169,16 +181,22 @@
                                 <ul class="mini-cart">
 
                                     @foreach($dado_carrinho['cart_produtos'] as $item)
-                                    <li class="cart-item">
-                                        <div class="cart-image">
-                                            <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}"><img style="max-height: 50px; max-width: 80px;" src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" alt="{{$item->NmProduto}}"></a>
-                                        </div>
-                                        <div class="cart-title">
-                                            <a href="single-product.html"><h4>{{ $item->NmProduto }}</h4></a>
-                                            <span class="quantity">{{$item->QtProduto}} ×</span>
-                                            <div class="price-box"><span class="new-price">R$ {{ number_format($item->VlPrecoTotal, 2, ',', '.') }}</span></div>
-                                        </div>
-                                    </li>
+                                        <li class="cart-item">
+                                            <div class="cart-image">
+                                                <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}">
+                                                    @if($item->NmFoto == '')
+                                                        <img style="max-height: 50px; max-width: 80px;" src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                                    @else
+                                                        <img style="max-height: 50px; max-width: 80px;" src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                                    @endif
+                                                </a>
+                                            </div>
+                                            <div class="cart-title">
+                                                <a href="single-product.html"><h4>{{ $item->NmProduto }}</h4></a>
+                                                <span class="quantity">{{$item->QtProduto}} ×</span>
+                                                <div class="price-box"><span class="new-price">R$ {{ number_format($item->VlPrecoTotal, 2, ',', '.') }}</span></div>
+                                            </div>
+                                        </li>
                                     @endforeach
 
                                     <li class="subtotal-titles">
@@ -188,7 +206,7 @@
                                     <li class="mini-cart-btns">
                                         <div class="cart-btns">
                                             <a href="{{ route('front.carrinho') }}">Ver Carrinho</a>
-                                            <a href="{{ route('front.carrinho') }}">Fechar</a>
+                                            <a href="{{ route('front.checkout') }}">Fechar</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -209,10 +227,12 @@
             <button class="search-close"><span class="icon-close"></span></button>
         </div>
         <div class="sidebar-search-input">
-            <form>
+            <form action="{{ route('front.busca') }}" method="get">
+                @csrf
+                @method('get')
                 <div class="form-search">
-                    <input id="search" class="input-text" value="" placeholder="Busque na loja ..." type="search">
-                    <button class="search-btn" type="button">
+                    <input id="search" name="busca" class="input-text" value="" placeholder="Busque na loja ..." type="search">
+                    <button class="search-btn" type="submit">
                         <i class="icon-magnifier"></i>
                     </button>
                 </div>
@@ -227,10 +247,12 @@
             <button class="search-close"><span class="icon-close"></span></button>
         </div>
         <div class="sidebar-search-input">
-            <form>
+            <form action="{{ route('front.busca') }}" method="get">
+                @csrf
+                @method('get')
                 <div class="form-search">
-                    <input id="search" class="input-text" value="" placeholder="Busque na loja ..." type="search">
-                    <button class="search-btn" type="button">
+                    <input id="search" name="busca" class="input-text" value="" placeholder="Busque na loja ..." type="search">
+                    <button class="search-btn" type="submit">
                         <i class="icon-magnifier"></i>
                     </button>
                 </div>
@@ -263,7 +285,7 @@
                                 </li>
                             </ul>
                             <div class="payment-cart">
-                                <img src="/assets/images/card.png" alt="card">
+                                <img src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_550_50.gif" alt="Logotipos de meios de pagamento do PagSeguro" title="Este site aceita pagamentos com as principais bandeiras e bancos, saldo em conta PagSeguro e boleto.">
                             </div>
                         </div>
                     </div>
@@ -322,10 +344,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="footer-social">
                             <ul>
-                                <li><a href="https://twitter.com/Pardaltec" target="_blank"><i class="ion-social-twitter"></i></a></li>
-                                <li><a href="https://www.youtube.com/channel/UCEOsKJlaL6Ir1i9oeE0WNDw" target="_blank"><i class="ion-social-youtube"></i></a></li>
-                                <li><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-facebook"></i></a></li>
-                                <li><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
+                                <li><a href="https://www.instagram.com/trama.home" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
                             </ul>
                         </div>
                     </div>

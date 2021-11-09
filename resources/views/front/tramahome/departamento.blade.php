@@ -83,7 +83,13 @@
                                 <div class="sidbar-product-inner">
 
                                     <div class="product-image">
-                                        <a href="product-details.html"><img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" alt="{{ $item->NmProduto }}" title="{{ $item->NmProduto }}"></a>
+                                        <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}">
+                                            @if($item->NmFoto == '')
+                                                <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                            @else
+                                                <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                            @endif
+                                        </a>
                                     </div>
                                     <div class="product-content text-left">
                                         <h3><a href="product-details.html" class="small">{{ $item->NmProduto }}</a></h3>

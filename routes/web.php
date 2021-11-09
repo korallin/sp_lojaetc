@@ -15,17 +15,23 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-if(!isset($_COOKIE['lojaetc_id'])){
-    setcookie('lojaetc_id', session()->getId(), time() + (86400 * 90), "/");
+$a = session_id();
+if ($a == '') session_start();
+if (!isset($_SESSION['safety']))
+{
+    session_regenerate_id(true);
+    $_SESSION['safety'] = true;
 }
+$_SESSION['lojaetc_id'] = session_id();
 
 
 if (strpos(request()->getHttpHost(),"pardal") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_pardal']);
+    config(['database.connections.mysql.database' => 'spcommerce_pardal']);
     Session::put('loja', 'pardal');
     Session::put('loja_email', 'contato@pardal.com.br');
     Session::put('loja_cep', '25730745');
-    Session::put('loja_transportadora', ['Correios', 'JadLog']);
+    Session::put('loja_transportadora', ['Correios', 'Jadlog', 'Braspress']);
     Session::put('loja_whatsapp', '24 98815-2465');
     Session::put('loja_estabelecimento', 1);
     Session::put('loja_base', 'spcommerce_pardal');
@@ -35,14 +41,23 @@ if (strpos(request()->getHttpHost(),"pardal") !== false) {
     Session::put('loja_cielo_merchantid', '7d514873-b94e-429f-baa0-d8108f816bc4');
     Session::put('loja_cielo_softdescriptor', 'PARDALTEC');
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/pardal/produto/');
+
+    /*
+
+     #cielo
+     033.271.427-69
+     senha:219010
+     */
+
 }
 
 if (strpos(request()->getHttpHost(),"casaverde") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_casaverde']);
+    config(['database.connections.mysql.database' => 'spcommerce_casaverde']);
     Session::put('loja', 'casaverde');
     Session::put('loja_email', 'contatotramahome@gmail.com');
     Session::put('loja_cep', '25730745');
-    Session::put('loja_transportadora', ['Correios', 'JadLog']);
+    Session::put('loja_transportadora', ['Correios']);
     Session::put('loja_whatsapp', '24 98815-2465');
     Session::put('loja_estabelecimento', 4);
     Session::put('loja_base', 'spcommerce_casaverde');
@@ -53,10 +68,11 @@ if (strpos(request()->getHttpHost(),"casaverde") !== false) {
 
 if (strpos(request()->getHttpHost(),"tramahome") !== false) {
     config(['database.connections.mysql_loja.database' => 'spcommerce_tramahome']);
+    config(['database.connections.mysql.database' => 'spcommerce_tramahome']);
     Session::put('loja', 'tramahome');
     Session::put('loja_email', 'contatotramahome@gmail.com');
     Session::put('loja_cep', '25730745');
-    Session::put('loja_transportadora', ['Correios', 'JadLog']);
+    Session::put('loja_transportadora', ['Correios']);
     Session::put('loja_whatsapp', '24 98815-2465');
     Session::put('loja_base', 'spcommerce_tramahome');
     Session::put('loja_estabelecimento', 1);
@@ -72,9 +88,11 @@ if (strpos(request()->getHttpHost(),"tramahome") !== false) {
 Route::get('/', [\App\Http\Controllers\Front\WebControllerDB::class, 'home'])->name('front.home');
 
 Route::get('/contato', [\App\Http\Controllers\Front\Paginas::class, 'contato'])->name('front.contato');
+Route::get('/faleconosco', [\App\Http\Controllers\Front\Paginas::class, 'contato'])->name('front.faleconosco');
 
 Route::get('/pagina/{id}/{nome}', [\App\Http\Controllers\Front\Paginas::class, 'paginas'])->name('front.paginas');
 Route::get('/departamento/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'departamento'])->name('front.departamento');
+Route::get('/busca', [\App\Http\Controllers\Front\WebControllerDB::class, 'busca'])->name('front.busca');
 Route::get('/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'produto'])->name('front.produto');
 
 Route::get('/carrinho', [\App\Http\Controllers\Front\Carrinho::class, 'lista_carrinho'])->name('front.carrinho');
@@ -98,6 +116,12 @@ Route::post('/cliente-cadastro-form-grava', [\App\Http\Controllers\Front\Cliente
 # retorno cielo
 Route::any('/retorno-cielo', [\App\Http\Controllers\CieloCheckout::class, 'retorno'])->name('retorno.cielo');
 Route::any('/retorno-pagseguro', [\App\Http\Controllers\PagSeguroController::class, 'retorno'])->name('retorno.pagseguro');
+
+# cep
+Route::post('/cep', [\App\Http\Controllers\Auxiliar::class, 'cep_f'])->name('front.cep');
+Route::post('/frete', [\App\Http\Controllers\FreteNet::class, 'consulta'])->name('front.frete');
+Route::post('/salva-endereco', [\App\Http\Controllers\Front\Cliente::class, 'salva_endereco'])->name('front.salva_endereco');
+Route::get('/troca-endereco', [\App\Http\Controllers\Front\Cliente::class, 'troca_endereco'])->name('front.troca_endereco');
 
 
 Auth::routes();

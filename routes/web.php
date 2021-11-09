@@ -31,7 +31,7 @@ if (strpos(request()->getHttpHost(),"pardal") !== false) {
     Session::put('loja', 'pardal');
     Session::put('loja_email', 'contato@pardal.com.br');
     Session::put('loja_cep', '25730745');
-    Session::put('loja_transportadora', ['Correios', 'Jadlog', 'Braspress']);
+    Session::put('loja_transportadora', ['Correios', 'Jamef', 'Braspress']);
     Session::put('loja_whatsapp', '24 98815-2465');
     Session::put('loja_estabelecimento', 1);
     Session::put('loja_base', 'spcommerce_pardal');

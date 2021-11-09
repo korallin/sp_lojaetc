@@ -122,7 +122,7 @@ class PagSeguroController extends Controller
             $onlyCheckoutCode = true;
             $result = $paymentRequest->register($_configs->getAccountCredentials());
 
-            //dd($result);
+            dd($result);
             return $result;
 
         } catch (Exception $e) {

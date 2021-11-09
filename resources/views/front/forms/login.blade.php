@@ -87,13 +87,15 @@
                                                 <input type="password" name="senha" placeholder="Senha">
                                             </div>
                                             <div class="button-box">
+                                                <div class="button-box">
+                                                    <button class="login-btn btn" type="submit"><span>Entrar</span></button>
+                                                    <a onclick="$('#lg1').removeClass('active'); $('#lg2').addClass('active');" class="login-btn ml-3 btn text-white" type="submit"><span>Novo Cadastro</span></a>
+                                                </div>
+
                                                 <div class="login-toggle-btn">
                                                     <a href="javascript:void(0)" data-toggle="modal" data-target="#senha-modal">Perdeu a senha?</a>
                                                 </div>
-                                                <div class="button-box">
-                                                    <button class="login-btn btn" type="submit"><span>Entrar</span></button>
-                                                    <button class="login-btn btn" type="submit"><span>Novo Cadastro</span></button>
-                                                </div>
+
                                             </div>
                                         </form>
 
@@ -160,6 +162,7 @@
                                             </div>
                                             <div class="button-box">
                                                 <button class="register-btn btn" type="submit"><span>Enviar</span></button>
+                                                <a onclick="$('#lg2').removeClass('active'); $('#lg1').addClass('active');" class="login-btn ml-3 btn text-white" type="submit"><span>Já tenho login</span></a>
                                             </div>
                                         </form>
                                     </div>

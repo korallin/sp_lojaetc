@@ -110,6 +110,15 @@ class Auxiliar extends Controller
         return json_encode($cep, true);
     }
 
+    static public function cep_cad($dado) {
+        $w_cep = \App\Http\Controllers\Auxiliar::l_int($dado);
+        $cep = \App\Models\AuxCeps::selectRaw('endereco.*, bairro.nome as bairro, cidade.nome as cidade, endereco.id_uf as uf')
+            ->join('bairro','bairro.id_bairro','endereco.id_bairro')
+            ->join('cidade','cidade.id_cidade','endereco.id_cidade')
+            ->where('endereco.cep',$w_cep)->first();
+        return json_encode($cep);
+    }
+
     static public function cep_f(Request $request) {
         $w_cep = \App\Http\Controllers\Auxiliar::l_int($request->cep);
         $cep = \App\Models\AuxCeps::selectRaw('endereco.*, bairro.nome as bairro, cidade.nome as cidade, endereco.id_uf as uf')

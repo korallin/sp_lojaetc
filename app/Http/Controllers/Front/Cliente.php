@@ -144,7 +144,7 @@ class Cliente extends Controller
             return Redirect::back()->withErrors(['msg' => 'Seu E-MAIL já consta em nossos registros, tente solicitar uma nova senha!']);
         }
 
-        $endereco = \App\Http\Controllers\Auxiliar::cep_f($request->cep);
+        $endereco = \App\Http\Controllers\Auxiliar::cep_cad($request->cep);
         $pessoa_endereco = json_decode($endereco,false);
 
         $pessoa = new \App\Models\Cliente();

@@ -237,16 +237,13 @@
                                     @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $item)
 
                                         <div class="mt-2 bg-light border pl-3">
-                                            <div class="form-check ml-4" onclick="$('.some').hide(); $('blo-{{$item['carrier']}}').show();">
-                                                <div class="d-flex align-items-center">
+                                            <div class="form-check ml-4" >
+                                                <div class="d-flex align-items-center" onclick="$('.some').hide(); $('#blo-{{$item['carrier']}}').show();">
                                                     <input class="form-check-input text-info" style="width: 30px; height: 30px;" required type="radio" name="frete" id="frete{{$item['carrier']}}" value="{{$item['carrier']}}">
-
                                                     <label class="form-check-label" for="frete{{$item['carrier']}}">
                                                         <h4 class="mb-0 mt-2 text-info font-weight-bold">{{ ($item['carrier'] != 'Correios' ? 'Transportadora '.$item['carrier'] : $item['carrier_description']) }}<br></h4>
                                                         <b>R$ {{ number_format(($item['price']), 2, ',', '.') }}</b> Prazo estimado <span class="amount font-weight-bold">{{$item['deliveryTime']}}</span> dias úteis.
                                                     </label>
-
-
                                                 </div>
                                             </div>
                                         </div>

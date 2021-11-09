@@ -122,7 +122,7 @@ class PagSeguroController extends Controller
             $onlyCheckoutCode = true;
             $result = $paymentRequest->register($_configs->getAccountCredentials());
 
-            dd($result);
+            //dd($result);
             return $result;
 
         } catch (Exception $e) {
@@ -132,6 +132,9 @@ class PagSeguroController extends Controller
 
     public function retorno(Request $request)
     {
+
+        return redirect()->route('front.recibo', ['dados' => $request->all()]);
+        /*
         $dados['retorno_pagseguro'] = $request->all();
         $dados['pedido'] = Session::get('espelho');
         $dados = json_encode($dados, true);
@@ -140,6 +143,7 @@ class PagSeguroController extends Controller
             return redirect()->route('front.recibo', ['dados' => $request->all()]);
         }
         //dd($request);
+        */
     }
 
     static public function verificaNotificacao(Request $request)

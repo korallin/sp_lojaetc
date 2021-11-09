@@ -32,6 +32,7 @@ class Controller extends BaseController
             join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
             left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
             where PR.DtDesativacao is null
+            and PR.StLojaVirtual = 1
 
             group by CdGrupo
             order by NmGrupo;
@@ -57,6 +58,7 @@ class Controller extends BaseController
 
         where PR.DtDesativacao is null
         and PP.CdTabela in (?)
+        and PR.StLojaVirtual = 1
         group by PR.CdProduto
         order by StFoto desc, PR.DtAtualizacao desc, rand() limit 3;
 
@@ -95,6 +97,7 @@ class Controller extends BaseController
         where PT.CdEstabel = ?
         and PT.CdMovimento = 9
             and PT.NuSessao = ?
+        and PR.StLojaVirtual = 1
         group by PT.CdProduto, PT.CdDetalhe
         order by PT.CdTemp;
         ', [Session::get('loja_estabelecimento'), $_SESSION['lojaetc_id']]);

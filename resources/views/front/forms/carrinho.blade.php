@@ -96,7 +96,7 @@
                                                 <div class="input-group mb-3">
                                                     <input type="text" name="NuCep" value="" required="required" class="form-control cep" placeholder="Informe seu CEP" id="NuCep">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-outline-secondary" type="button">Enviar</button>
+                                                        <button class="btn btn-outline-secondary btenviar" type="button">Enviar</button>
                                                     </div>
                                                 </div>
                                                 <div id="resultado"></div>
@@ -148,7 +148,7 @@
                 url: '{{ route('front.cep') }}',
                 data: {cep:w_cep, _token: '{{ @csrf_token() }}', tipoProcesso:'enderecoCep' },
                 success: function( data ) {
-                    $('#AjaxCarregaProcesso').html(data);
+                    $('.btenviar').text('<i class="fas fa-sync fa-spin"></i>');
 
                     const obj = JSON.parse(data);
 
@@ -178,16 +178,20 @@
 
                                     });
 
-
+                                    $('.btenviar').text('Enviar');
 
                                 } else {
                                     $('#frete').html("Cep inválido.");
+                                    $('.cep').val('');
+                                    $('.btenviar').text('Enviar');
                                 }
                             }
                         });
 
                     } else {
                         $('#resultado').html("Cep inválido.");
+                        $('.cep').val('');
+                        $('.btenviar').text('Enviar');
                     }
                 }
             });

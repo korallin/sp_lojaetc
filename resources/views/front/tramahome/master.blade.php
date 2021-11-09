@@ -185,9 +185,9 @@
                                             <div class="cart-image">
                                                 <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}">
                                                     @if($item->NmFoto == '')
-                                                        <img style="max-height: 50px; max-width: 80px;" src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                                        <img style="max-height: 100px; max-width: 80px;" src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                                     @else
-                                                        <img style="max-height: 50px; max-width: 80px;" src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                                        <img style="max-height: 100px; max-width: 80px;" src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                                     @endif
                                                 </a>
                                             </div>

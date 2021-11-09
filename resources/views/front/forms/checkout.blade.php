@@ -237,7 +237,7 @@
                                     @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $item)
 
                                         <div class="mt-2 bg-light border pl-3">
-                                            <div class="form-check ml-4">
+                                            <div class="form-check ml-4" onclick="$('.some').hide(); $('blo-{{$item['carrier']}}').show();">
                                                 <div class="d-flex align-items-center">
                                                     <input class="form-check-input text-info" style="width: 30px; height: 30px;" required type="radio" name="frete" id="frete{{$item['carrier']}}" value="{{$item['carrier']}}">
 
@@ -270,13 +270,17 @@
                                                     <label class="form-check-label" for="pagamento{{$item->CdPagamento}}">
                                                         <h4 class="mb-0 mt-2 text-primary font-weight-bold">{{$item->NmPagamento}}</h4>
                                                         <p class="mb-0 small text-muted pr-5">{{ $item->TxPagamento }}</p>
-                                                        <p>Em até {{ $item->NuParcelaMaximo }} X
-                                                            <select class="form-control" name="parcelas">
-                                                                @for($i=1;$i<=$item->NuParcelaMaximo;$i++)
-                                                                    <option value="{{ $i }}"> {{ $i }} X de R$ {{ number_format((\Illuminate\Support\Facades\Session::get('carrinho_total')/$i), 2, ',', '.') }} </option>
-                                                                @endfor
-                                                            </select>
-                                                        </p>
+
+                                                        @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $frete)
+                                                            <p id="blo-{{$frete['carrier']}}" class="some" style="display: none;">Em até {{ $item->NuParcelaMaximo }} X
+                                                                <select class="form-control" name="parcelas">
+                                                                    @for($i=1;$i<=$item->NuParcelaMaximo;$i++)
+                                                                        <option value="{{ $i }}"> {{ $i }} X de R$ {{ number_format(((\Illuminate\Support\Facades\Session::get('carrinho_total')+$frete['price'])/$i), 2, ',', '.') }} </option>
+                                                                    @endfor
+                                                                </select>
+                                                            </p>
+                                                        @endforeach
+
                                                     </label>
 
 

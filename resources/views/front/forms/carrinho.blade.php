@@ -90,11 +90,11 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="cart-page-total">
                                                 <h2>Simule seu frete</h2>
                                                 <div class="input-group mb-3">
-                                                    <input type="text" name="NuCep" value="" required="required" class="form-control cep" id="NuCep">
+                                                    <input type="text" name="NuCep" value="" required="required" class="form-control cep" placeholder="Informe seu CEP" id="NuCep">
                                                     <div class="input-group-append">
                                                         <button class="btn btn-outline-secondary" type="button">Enviar</button>
                                                     </div>

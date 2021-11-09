@@ -38,6 +38,7 @@ class WebControllerDB extends Controller
 
         where PR.DtDesativacao is null
         and PP.CdTabela in (?)
+        and PR.StLojaVirtual = 1
 
         group by PR.CdProduto
         order by StFoto desc, PR.DtAtualizacao desc, rand() limit 9;
@@ -92,6 +93,7 @@ class WebControllerDB extends Controller
         left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
 
         where PR.DtDesativacao is null
+          and PR.StLojaVirtual = 1
         and PP.CdTabela in (?)
         and if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, GR.CdDepartamento ) = ?
 
@@ -150,6 +152,7 @@ class WebControllerDB extends Controller
         where PR.DtDesativacao is null
         and PP.CdTabela in (?)
         and (PR.NmProduto like "%'.$request->busca.'%" OR PR.TxProduto like "%'.$request->busca.'%")
+        and PR.StLojaVirtual = 1
 
         group by PR.CdProduto
         order by
@@ -207,6 +210,7 @@ class WebControllerDB extends Controller
         where PR.DtDesativacao is null
         and PP.CdTabela in (?)
         and PR.CdProduto = ?
+        and PR.StLojaVirtual = 1
 
         group by PR.CdProduto
         limit 1;
@@ -251,6 +255,7 @@ class WebControllerDB extends Controller
 
         where PR.DtDesativacao is null
         and PP.CdTabela in (?)
+          and PR.StLojaVirtual = 1
 
         and PR.CdProduto <> ?
         group by PR.CdProduto

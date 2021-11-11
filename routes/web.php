@@ -79,6 +79,7 @@ if (strpos(request()->getHttpHost(),"tramahome") !== false) {
     Session::put('loja_caixa', 90);
     Session::put('loja_tabelas', '1,2');
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/tramahome/produto/');
+    Session::put('loja_banners', 'https://d.spcommerce.com.br/tramahome/publicidade/');
     Session::put('loja_pagseguro_token', '03132e81-fc6f-4c44-984c-d30d253d8f5a06e9f23b4e4ebf42b46a75753ee3691c7250-7654-4770-b98a-6a7d7704cfe2');
     Session::put('loja_pagseguro_email', 'contatotramahome@gmail.com');
     Session::put('loja_pagseguro_ambiente', 'production');

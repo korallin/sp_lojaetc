@@ -49,9 +49,19 @@ class WebControllerDB extends Controller
 
         $view = 'front.'.Session::get('loja').'.home';
 
+        $banners = DB::connection('mysql_loja')->select('
+            select * from publicidade
+            where CdEstabel = '.Session::get('loja_estabelecimento').'
+            and StPublicidade = 1
+            and CdTipo = 1
+            and DtInicial <= now()
+            and DtFinal >= now()
+            order by rand() limit 1;
+        ');
+
         //dump($view);
 
-        return view($view, ['produtos' => $produtos]);
+        return view($view, ['produtos' => $produtos, 'banners' => $banners]);
 
     }
 

@@ -10,32 +10,26 @@
 
 @section('content')
 
+    @if($banners)
     <!-- Hero Slider Start -->
     <div class="hero-slider hero-slider-one ">
+
+        @foreach($banners as $banner)
         <!-- Single Slide Start -->
         <div class="single-slide" style="height: auto;">
             <!-- Hero Content One Start -->
             <div class="hero-content-one text-center w-100">
-                <img src="https://www.casaalmeida.com.br/media/wysiwyg/1920x550px_Cobertores_2.jpg" class="img-fluid" style="display: initial;">
+                <img src="{{\Illuminate\Support\Facades\Session::get('loja_banners')}}{{ $banner->NmPublicidade }}" class="img-fluid" style="display: initial;">
             </div>
             <!-- Hero Content One End -->
         </div>
         <!-- Single Slide End -->
-
-        <!-- Single Slide Start -->
-        <div class="single-slide" style="height: auto;">
-            <!-- Hero Content One Start -->
-            <div class="hero-content-one text-center w-100">
-                <img src="https://www.casaalmeida.com.br/media/wysiwyg/1920x550px_Fio_Classic_9.jpg" class="img-fluid" style="display: initial;">
-            </div>
-            <!-- Hero Content One End -->
-        </div>
-        <!-- Single Slide End -->
-
+        @endforeach
 
 
     </div>
     <!-- Hero Section End -->
+    @endif
 
 
 
@@ -156,23 +150,11 @@
                 <div class="col-lg-6 offset-lg-1">
                     <div class="instagram-wrapper">
                         <div class="instaram-title text-center">
-                            <h3>Siganos no Instagram <a href="#">@tramahome</a></h3>
+                            <h3>Siga-nos no Instagram <a href="#">@tramahome</a></h3>
                         </div>
-                        <div class="instagram-warp instagram-slider row">
-                            <div class="col-lg-6">
-                                <div class="single-instagram">
-                                    <a href="#"><img src="/assets/images/instagram1.jpg" alt="instagram1"></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="single-instagram">
-                                    <a href="#"><img src="/assets/images/instagram2.jpg" alt="instagram2"></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="single-instagram">
-                                    <a href="#"><img src="/assets/images/instagram3.jpg" alt="instagram3"></a>
-                                </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <a href="#"><img src="/assets/tramahome/img/trama_home.jpg" alt="instagram1"></a>
                             </div>
                         </div>
                     </div>

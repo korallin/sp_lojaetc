@@ -1462,6 +1462,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   line-height: 16px;
 }
 
+.header-top a:hover {
+    color: #ccc !important;
+}
+
 @media only screen and (max-width: 767px) {
   .header-top {
     text-align: center;

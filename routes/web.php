@@ -91,6 +91,8 @@ Route::get('/', [\App\Http\Controllers\Front\WebControllerDB::class, 'home'])->n
 Route::get('/contato', [\App\Http\Controllers\Front\Paginas::class, 'contato'])->name('front.contato');
 Route::get('/faleconosco', [\App\Http\Controllers\Front\Paginas::class, 'contato'])->name('front.faleconosco');
 
+Route::post('/grava-contato', [\App\Http\Controllers\Front\Paginas::class, 'contato_grava'])->name('front.contato_grava');
+
 Route::get('/pagina/{id}/{nome}', [\App\Http\Controllers\Front\Paginas::class, 'paginas'])->name('front.paginas');
 Route::get('/departamento/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'departamento'])->name('front.departamento');
 Route::get('/busca', [\App\Http\Controllers\Front\WebControllerDB::class, 'busca'])->name('front.busca');

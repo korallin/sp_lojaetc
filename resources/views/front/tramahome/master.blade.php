@@ -37,7 +37,7 @@
             width:60px;
             height:60px;
             bottom:40px;
-            right:40px;
+            right:75px;
             background-color:#25d366;
             color:#FFF;
             border-radius:50px;
@@ -127,7 +127,7 @@
                 <div class="row">
 
                     <div class="col-md-4 col-sm-6">
-                        <p> <a href="https://instagram.com/tramahome" class="mr-3"><i class="fab fa-instagram"></i> tramahome</a> <a href="https://api.whatsapp.com/send?phone=+5524988152465&text=Olá gostaria de um contato." target="_blank"> <i class="fab fa-whatsapp"></i> (24) 98815-2465</a> </p>
+                        <p> <a href="https://instagram.com/trama.home" target="_blank" class="mr-3"><i class="fab fa-2x fa-instagram"></i> trama.home</a> <a href="https://api.whatsapp.com/send?phone=+5524988152465&text=Olá gostaria de um contato." target="_blank"> <i class="fab fa-2x fa-whatsapp"></i> (24) 98815-2465</a> </p>
                     </div>
                     <div class="col-md-5 col-sm-6">
                         <!-- language-currency-wrapper start -->
@@ -371,7 +371,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="footer-social">
                             <ul>
-                                <li><a href="https://www.instagram.com/trama.home" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
+                                <li><a href="https://www.instagram.com/trama.home" target="_blank" style="font-size: 25px;"><i class="ion-social-instagram-outline"></i> trama.home</a></li>
                             </ul>
                         </div>
                     </div>

@@ -30,23 +30,41 @@
                         <h2>Deixe sua mensagem</h2>
                         <p>Entre em contato conosco preenchendo o formulário.</p>
 
+                        @if(\Session::has('sucesso'))
+                            <div class="row">
+                                <div class="col-lg-12">
+
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ \Session::get('sucesso') }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        @endif
+
                         <div class="contact-form-warp">
-                            <form  action="" method="post">
+                            <form  action="{{ route('front.contato_grava') }}" method="post">
+                                @csrf
+                                @method('post')
                                 <div class="row">
                                     <div class="col-lg-10">
-                                        <input type="text" name="name" placeholder="Nome Completo*" required>
+                                        <input type="text" name="nome" value="{{ old('nome') }}" required="required" class="form-control input-lg {{ ($errors->has('nome') ? 'is-invalid' : '') }}" placeholder="Nome Completo*" required>
                                     </div>
                                     <div class="col-lg-10">
-                                        <input type="email" name="email" placeholder="E-mail *" required>
+                                        <input type="email" name="email" value="{{ old('email') }}" class="form-control input-lg {{ ($errors->has('email') ? 'is-invalid' : '') }}" placeholder="E-mail *" required>
                                     </div>
                                     <div class="col-lg-10">
-                                        <input type="phone" name="phone" placeholder="Celular*" required>
+                                        <input type="phone" name="celular" value="{{ old('celular') }}" class="form-control celular input-lg {{ ($errors->has('celular') ? 'is-invalid' : '') }}" placeholder="Celular*" required>
                                     </div>
                                     <div class="col-lg-10">
-                                        <input type="text" name="subject" placeholder="Assunto*" required>
+                                        <input type="text" name="assunto" value="{{ old('assunto') }}" class="form-control input-lg {{ ($errors->has('assunto') ? 'is-invalid' : '') }}" placeholder="Assunto*" required>
                                     </div>
                                     <div class="col-lg-10">
-                                        <textarea name="message" placeholder="Sua Mensagem*"></textarea>
+                                        <textarea name="mensagem" required="required" class="form-control input-lg {{ ($errors->has('mensagem') ? 'is-invalid' : '') }}" placeholder="Sua Mensagem*">{{ old('mensagem') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="contact-submit-btn">
@@ -82,7 +100,17 @@
 @section('js')
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDz97C4R2FizQEK2h28RlQyJTBgFjY5Spc"></script>
+    <script src="/assets/js/jquery.mask.min.js" type="text/javascript"></script>
+
     <script>
+        $(document).ready(function(e){
+
+            $('.cep').mask('00.000-000');
+            $('.telefone').mask('(00) 0000-0000');
+            $('.celular').mask('(00) 0 0000-0000');
+            $('.cpf').mask('000.000.000-00');
+        });
+
         function initMap() {
             const myLatLng = { lat: -22.399577266514758, lng: -43.13381412592666 };
             const map = new google.maps.Map(document.getElementById("map-inner"), {

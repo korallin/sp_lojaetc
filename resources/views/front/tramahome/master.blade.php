@@ -31,7 +31,26 @@
     <link rel="stylesheet" href="/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/style.css">
     <link rel="stylesheet" href="/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/custom.css">
 
+    <style>
+        .floatzap{
+            position:fixed;
+            width:60px;
+            height:60px;
+            bottom:40px;
+            right:40px;
+            background-color:#25d366;
+            color:#FFF;
+            border-radius:50px;
+            text-align:center;
+            font-size:30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index:100;
+        }
 
+        .my-floatzap{
+            margin-top:16px;
+        }
+    </style>
 
     <!-- Modernizer JS -->
     <script src="/assets/js/vendor/modernizr-2.8.3.min.js"></script>
@@ -62,6 +81,12 @@
 </div>
 <!-- preloader end -->
 <body>
+
+<a href="https://api.whatsapp.com/send?phone=+5524988152465&text=Olá gostaria de um contato." class="floatzap" target="_blank">
+    <i class="fab fa-whatsapp my-floatzap"></i>
+</a>
+
+
 <!-- Main Wrapper Start -->
 <div class="main-wrapper home-2">
     <!-- newsletter-popup-area Start -->
@@ -102,14 +127,15 @@
                 <div class="row">
 
                     <div class="col-md-4 col-sm-6">
-                        <p> <a href="#"> <i class="fab fa-whatsapp"></i> + 55 24 98815-2465</a> </p>
+                        <p> <a href="https://instagram.com/tramahome" class="mr-3"><i class="fab fa-instagram"></i> tramahome</a> <a href="https://api.whatsapp.com/send?phone=+5524988152465&text=Olá gostaria de um contato." target="_blank"> <i class="fab fa-whatsapp"></i> (24) 98815-2465</a> </p>
                     </div>
                     <div class="col-md-5 col-sm-6">
                         <!-- language-currency-wrapper start -->
                         <div class="language-currency-wrapper">
                             <ul>
 
-                                <li class="drodown-show"><a href="https://www.instagram.com/trama.home" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
+                                <li class="drodown-show"><a href="{{ route('front.paginas', [1,'sobre-nos']) }}">Sobre Nós</a></li>
+                                <li class="drodown-show"><a href="{{ route('front.contato') }}">Contato</a></li>
 
                                 <li class="drodown-show"><a href="#">Minha Conta <i class="ion-ios-arrow-down"></i></a>
                                     <ul class="open-dropdown" style="min-width: 200px;">
@@ -147,15 +173,11 @@
                             <nav class="main-navigation">
                                 <ul>
                                     <li  class="active"><a href="{{ route('front.home') }}">Home</a></li>
-                                    <li><a href="{{ route('front.paginas', [1,'quem-somos']) }}">Quem Somos</a></li>
-                                    <li><a href="#">Produtos</a>
-                                        <ul class="mega-menu">
-                                            @foreach($departamentos as $dep)
-                                            <li class="p-2"><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
-                                            @endforeach
-                                        </ul>
-                                    </li>
-                                    <li><a href="{{ route('front.contato') }}">Contato</a></li>
+                                    @foreach($departamentos as $dep)
+                                    <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+                                    @endforeach
+
+
                                 </ul>
                             </nav>
                         </div>

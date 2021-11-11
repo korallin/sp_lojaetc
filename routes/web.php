@@ -107,10 +107,12 @@ Route::get('/cliente-login', [\App\Http\Controllers\Front\Cliente::class, 'login
 Route::post('/login-senha', [\App\Http\Controllers\Front\Cliente::class, 'login_senha'])->name('front.login_senha');
 Route::match(['post', 'get'], '/cliente-login-valida', [\App\Http\Controllers\Front\Cliente::class, 'login_valida'])->name('front.login_valida');
 Route::match(['post', 'get'], '/cliente-area', [\App\Http\Controllers\Front\Cliente::class, 'cliente_area'])->name('front.cliente_area');
+Route::match(['post', 'get'], '/cliente-area/exclui/endereco', [\App\Http\Controllers\Front\Cliente::class, 'exclui_endereco'])->name('front.exclui_endereco');
 Route::match(['post', 'get'], '/cliente-logout', [\App\Http\Controllers\Front\Cliente::class, 'logout'])->name('front.logout');
 Route::post('/cliente-cadastro', [\App\Http\Controllers\Front\Cliente::class, 'cadastro_temp'])->name('front.cadastro_temp');
 Route::get('/cliente-cadastro-form', [\App\Http\Controllers\Front\Cliente::class, 'cadastro_form'])->name('front.cadastro_form');
 Route::post('/cliente-cadastro-form-grava', [\App\Http\Controllers\Front\Cliente::class, 'cadastro_grava'])->name('front.cadastro_grava');
+Route::post('/cliente-cadastro-edita-grava', [\App\Http\Controllers\Front\Cliente::class, 'cadastro_edita'])->name('front.cadastro_edita');
 
 //apis
 # retorno cielo

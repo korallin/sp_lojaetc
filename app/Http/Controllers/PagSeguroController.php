@@ -28,50 +28,6 @@ class PagSeguroController extends Controller
     {
 
         try {
-            /*
-            $client = new \GuzzleHttp\Client();
-            $response = $client->post(
-                'https://ws.sandbox.pagseguro.uol.com.br/v2/checkout?email='.Session::get('loja_pagseguro_email').'&token='.Session::get('loja_pagseguro_token'),
-                [
-                    'headers' => [
-                        'Token' => 'ca67b0b184904712436430a9299c7e69'
-                    ],
-                    'json' => [
-                        'currency' => 'BRL',
-
-                        'itemId1' => 0001
-                        'itemDescription1' => Notebook Prata
-                        'itemAmount1' => 100.00
-                        'itemQuantity1' => 1
-                        'itemWeight1' => 1000
-
-                        'reference' => $dados['venda']->CdVenda;
-                        'senderName' => Jose Comprador
-                        'senderAreaCode' => 11
-                        'senderPhone' => 56713293
-                        'senderCPF' => 38440987803
-                        'senderBornDate' => 12/03/1990
-                        'senderEmail' => email@sandbox.pagseguro.com.br
-                        'shippingType' => 1
-                        'shippingAddressStreet' => Av. Brig. Faria Lima
-                        'shippingAddressNumber' => 1384
-                        'shippingAddressComplement' => 2o andar
-                        'shippingAddressDistrict' => Jardim Paulistano
-                        'shippingAddressPostalCode' => 01452002
-                        'shippingAddressCity' => Sao Paulo
-                        'shippingAddressState' => SP
-                        'shippingAddressCountry' => BRA
-                        'extraAmount' => -0.01
-                        'redirectURL' => http' => //sitedocliente.com
-                        'notificationURL' => https' => //url_de_notificacao.com
-                        'maxUses' => 1
-                        'maxAge' => 3000
-                        'shippingCost' => 0.00
-                    ]
-                ]
-            );
-            return json_decode((string) $response->getBody(), true);
-            */
 
             $_configs = new Configure();
             $_configs->setCharset('UTF-8');
@@ -122,7 +78,11 @@ class PagSeguroController extends Controller
             $onlyCheckoutCode = true;
             $result = $paymentRequest->register($_configs->getAccountCredentials());
 
-            //dd($result);
+            $atzvenda = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'),'NuCaixa' => Session::get('loja_caixa'),'CdVenda' => $dados['venda']->CdVenda])->first();
+            $atzvenda->NmUrlTransacao = $result;
+            $atzvenda->save();
+
+            //dd($result,$paymentRequest->get);
             return $result;
 
         } catch (Exception $e) {
@@ -133,7 +93,70 @@ class PagSeguroController extends Controller
     public function retorno(Request $request)
     {
 
-        return redirect()->route('front.recibo', ['dados' => $request->all()]);
+        $url  = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/".$request->id."?email=".Session::get('loja_pagseguro_email')."&token=".Session::get('loja_pagseguro_token');
+        $url  = "https://ws.sandbox.pagseguro.uol.com.br/v3/transactions/".$request->id."?email=".Session::get('loja_pagseguro_email')."&token=".Session::get('loja_pagseguro_token');
+        //dump($url);
+        //Inicia o curl
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $resposta = curl_exec($curl);
+        $http     = curl_getinfo($curl);
+
+        //dd($resposta,$http);
+
+        if($resposta == 'Unauthorized'){
+
+            /*
+            $atzvenda = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'),'NuCaixa' => Session::get('loja_caixa')])->whereRaw('TxTransacao like "%'.$request->id.'"')->first();
+            $atzvenda->CdSituacao = 9;
+            $atzvenda->save();
+            */
+
+            return redirect()->route('front.checkout')->with('erro_pagamento','Pagamento recusado, tente novamente!');
+            exit;
+        }else{
+            //Interpreta uma string XML e a transforma em um objeto
+            $resposta= simplexml_load_string($resposta);
+            //dd($resposta);
+            //Verifica se existem erros
+            if(count($resposta->error) > 0){
+                return redirect()->route('front.checkout')->with('erro_pagamento', 'Pagamento recusado, tente novamente!');
+                exit;
+            }
+            //Verifica se a transação foi paga
+            if($resposta->status == 3){
+
+                $venda_pagamento = new \App\Models\VendaPagamento();
+                $venda_pagamento->CdEstabel = Session::get('loja_estabelecimento');
+                $venda_pagamento->NuCaixa = Session::get('loja_caixa');
+                $venda_pagamento->CdTipo = 4;
+                $venda_pagamento->CdVenda = $resposta->reference;
+                $venda_pagamento->CdPagamento = 11;
+                $venda_pagamento->VlPagamento = $resposta->grossAmount;
+                $venda_pagamento->DtVencimento = date('Y-m-d H:i');
+                $venda_pagamento->NmPagamentoECF = "PagSeguro";
+                $venda_pagamento->CdBanco = NULL;
+                $venda_pagamento->NuCartaoCheque = $resposta->code;
+                $venda_pagamento->NuCartaoSeguranca = NULL;
+                $venda_pagamento->NmCartaoTitular = NULL;
+                $venda_pagamento->NuCartaoValidadeData = NULL;
+                $venda_pagamento->NuParcela = $resposta->installmentCount;
+                $venda_pagamento->QtParcela = $resposta->installmentCount;
+                $venda_pagamento->VlTaxa = $resposta->feeAmount;
+                $venda_pagamento->StSincroniza = 1;
+                $venda_pagamento->DtAtualizacao = date('Y-m-d H:i');
+                $venda_pagamento->save();
+
+                return redirect()->route('front.recibo', ['dados' => $request->all()]);
+
+            }
+        }
+
+
+
+
         /*
         $dados['retorno_pagseguro'] = $request->all();
         $dados['pedido'] = Session::get('espelho');

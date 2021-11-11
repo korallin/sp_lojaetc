@@ -317,6 +317,10 @@
 
     <script>
 
+        @if(session()->has('erro_pagamento'))
+            alert('Transação não aprovada, tente novamente, caso persista entre em contato com sua operadora.');
+        @endif
+
         $('.cep').mask('00.000-000');
         $('.telefone').mask('(00) 0000-0000');
         $('.celular').mask('(00) 0 0000-0000');

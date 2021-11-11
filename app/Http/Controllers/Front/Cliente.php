@@ -16,7 +16,7 @@ class Cliente extends Controller
     public function exc(Request $request, $produto, $detalhe)
     {
         $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id'], 'CdProduto' => $produto, 'CdDetalhe' => $detalhe))->delete();
-        return redirect()->route('front.carrinho');
+        return redirect()->route('front.carrinho')->with('sucesso','Endereço excluido com sucesso!');
     }
 
     public function login(Request $request)
@@ -44,7 +44,30 @@ class Cliente extends Controller
 
         $dados['vendas'] = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdCliente' => Session::get('login')['login_id']])->orderBy('DtVenda', 'desc')->get();
 
-        //dd($dados, Session::all());
+        foreach($dados['vendas'] as $venda){
+            $dados['vendas_produtos'][$venda->CdVenda] = \App\Models\VendaProdutos::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdVenda' => $venda->CdVenda])->get();
+            $dados['vendas_pagamento'][$venda->CdVenda] = \App\Models\VendaProdutos::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdVenda' => $venda->CdVenda])->get();
+        }
+
+        //dd($dados['vendas_produtos']);
+
+        $dados['pessoa'] = DB::connection('mysql_loja')->select('
+            select * from cliente a
+                join cliente_email b on a.CdCliente = b.CdCliente
+                join cliente_telefone c on a.CdCliente = c.CdCliente
+            where a.CdCliente = ?
+        ', [Session::get('cliente')[0]->CdCliente]);
+
+        $dados['pessoa_email'] = $dados['pessoa'][0];
+        $dados['pessoa_telefone'] = $dados['pessoa'][1];
+        $dados['pessoa_celular'] = $dados['pessoa'][0];
+        $dados['pessoa'] = $dados['pessoa'][0];
+
+
+        $enderecos = \App\Models\ClienteEndereco::where('CdCliente', Session::get('cliente')[0]->CdCliente)->get();
+        $enderecos_total = \App\Models\ClienteEndereco::where('CdCliente', Session::get('cliente')[0]->CdCliente)->count();
+        Session::put('enderecos', $enderecos);
+        Session::put('enderecos_total', $enderecos_total);
 
         $view = 'front.forms.cliente-area';
         return view($view, ['dados' => $dados]);
@@ -154,7 +177,7 @@ class Cliente extends Controller
         $pessoa->DtCadastro = date('Y-m-d H:i:s');
         $pessoa->DtAtualizacao = date('Y-m-d H:i:s');
         $pessoa->StCliente = 9;
-        $pessoa->save();
+        //$pessoa->save();
 
         $pessoa_email = new \App\Models\ClienteEmail();
         $pessoa_email->CdCliente = $pessoa->CdCliente;
@@ -162,7 +185,7 @@ class Cliente extends Controller
         $pessoa_email->NmEmail = $request->email;
         $pessoa_email->StPadrao = 1;
         $pessoa_email->DtCadastro = date('Y-m-d H:i:s');
-        $pessoa_email->save();
+        //$pessoa_email->save();
 
         $dados['pessoa'] = $pessoa;
 
@@ -218,6 +241,10 @@ class Cliente extends Controller
         //$dados['pessoa_endereco']->id_uf = $request->CdCepUf;
         $dados['pessoa_endereco']->save();
 
+        if($request->areacliente){
+            return \redirect()->route('front.cliente_area')->with('sucesso','Endereço cadastrado com sucesso!');
+        }
+
         return \redirect()->route('front.checkout');
     }
 
@@ -236,6 +263,19 @@ class Cliente extends Controller
         return \redirect()->route('front.checkout');
     }
 
+    public function exclui_endereco(Request $request)
+    {
+
+        $cliente = Session::get('cliente')[0];
+
+        $cliente_endereco = DB::connection('mysql_loja')->select('
+            delete from cliente_endereco
+            where CdCliente = ? and CdEndereco = ?
+        ', [$cliente->CdCliente, $request->endereco]);
+
+        return \redirect()->route('front.cliente_area')->with('sucesso','Endereço excluido com sucesso!');
+    }
+
     public function cadastro_form(Request $request)
     {
         $dados = Session::get('cliente_pre');
@@ -247,8 +287,6 @@ class Cliente extends Controller
 
     public function cadastro_grava(Request $request)
     {
-
-
 
         $rules = [
             'NmCliente' => 'required',
@@ -277,6 +315,23 @@ class Cliente extends Controller
         //dd($request->all());
 
         $doc_int = \App\Http\Controllers\Auxiliar::l_int($request->NuCpfCnpj);
+        $pessoa = new \App\Models\Cliente();
+        $pessoa->TpCliente = ($request->tipo == 1 ? 'F' : 'J');
+        $pessoa->TpClassificacao = '77';
+        $pessoa->NuCpfCnpj = $doc_int;
+        $pessoa->DtCadastro = date('Y-m-d H:i:s');
+        $pessoa->DtAtualizacao = date('Y-m-d H:i:s');
+        $pessoa->StCliente = 9;
+        $pessoa->save();
+
+        $pessoa_email = new \App\Models\ClienteEmail();
+        $pessoa_email->CdCliente = $pessoa->CdCliente;
+        $pessoa_email->NmTipoEmail = 'Principal';
+        $pessoa_email->NmEmail = $request->NmEmail;
+        $pessoa_email->StPadrao = 1;
+        $pessoa_email->DtCadastro = date('Y-m-d H:i:s');
+        $pessoa_email->save();
+
         $valida_cliente = \App\Models\Cliente::where('NuCpfCnpj',$doc_int)->first();
 
         $pessoa = \App\Models\Cliente::find($valida_cliente->CdCliente);
@@ -341,6 +396,85 @@ class Cliente extends Controller
 
         }
         return redirect()->route('front.login_valida', ['login' => $pessoa->NuCpfCnpj, 'chave' => md5(sha1(md5(sha1($request->NmSenha))))]);
+
+    }
+
+    public function cadastro_edita(Request $request)
+    {
+
+
+
+        $rules = [
+            'NmCliente' => 'required',
+            'NmContato' => 'required',
+            'NuCelular' => 'required',
+        ];
+
+        $mensages = [
+            'NmCliente.required' => 'O Nome/Razão tem que ser preenchido.',
+            'NmContato.required' => 'O Apelido/Contato tem que ser preenchido.',
+            'NuCelular.required' => 'O Celular tem que ser preenchido.',
+        ];
+
+        $request->validate($rules, $mensages);
+
+        $pessoa = \App\Models\Cliente::find($request->CdCliente);
+
+        $pessoa->NmCliente = $request->NmCliente ;
+        $pessoa->NmContato = $request->NmContato ;
+        if($pessoa->TpCliente == 'F'){
+            $pessoa->NuIdentidade = $request->NuIdentidade ;
+        } else {
+            $pessoa->NuInscricaoEstadual = $request->NuInscricaoEstadual ;
+        }
+        $pessoa->DtAtualizacao = date('Y-m-d H:i:s');
+        $pessoa->StCliente = 1;
+        $pessoa->save();
+
+
+        /*
+        //CELULAR
+        $celular = \App\Http\Controllers\Auxiliar::l_int($request->NuCelular);
+        if($celular != '') {
+
+            $dadosCelular = \App\Models\ClienteTelefone::where('CdCliente', $pessoa->CdCliente)->where('NmTipoTelefone', 'CELULAR')->first();
+
+            if(!$dadosCelular){
+                $dadosCelular = new \App\Models\ClienteTelefone();
+                $dadosCelular->CdCliente = $pessoa->CdCliente;
+                $dadosCelular->NmTipoTelefone = 'CELULAR';
+                $dadosCelular->NuTelefone = $celular;
+                $dadosCelular->StPadrao = 1;
+                $dadosCelular->DtCadastro = date('Y-m-d H:i:s');
+                $dadosCelular->save();
+            } else {
+                $dadosCelular->NmTipoTelefone = 'CELULAR';
+                $dadosCelular->NuTelefone = $celular;
+                $dadosCelular->StPadrao = 1;
+                $dadosCelular->DtCadastro = date('Y-m-d H:i:s');
+                $dadosCelular->save();
+            }
+        }
+
+        dd($dadosCelular);
+        //CELULAR
+        $fixo = \App\Http\Controllers\Auxiliar::l_int($request->NuTelefone);
+
+        if($fixo != '') {
+            $dadosFixo = \App\Models\ClienteTelefone::where('CdCliente', $pessoa->CdCliente)->where('NmTipoTelefone', 'FIXO')->first();
+
+            if(!$dadosFixo){
+                $dadosFixo = new \App\Models\ClienteTelefone();
+                $dadosFixo->CdCliente = $pessoa->CdCliente;
+                $dadosFixo->NmTipoTelefone = 'FIXO';
+                $dadosFixo->NuTelefone = $fixo;
+                $dadosFixo->DtCadastro = date('Y-m-d H:i:s');
+                $dadosFixo->save();
+            }
+
+        }
+        */
+        return redirect()->route('front.cliente_area')->with('sucesso','Cadastro editado com sucesso!');
 
     }
 

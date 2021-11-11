@@ -93,6 +93,11 @@ class Carrinho extends Controller
             $venda_numero = $venda_numero[0]->numero;
         }
 
+        $entrega_banco = DB::connection('mysql_loja')->select('select * from entrega where NmCarier = "'.Session::get('carrinho_entrega')[$request->frete]['carrier_description'].'"');
+        Session::put('entrega_banco', $entrega_banco);
+
+        $transacao = json_encode(Session::all(), true);
+
         $total_venda = (Session::get('carrinho_total') + Session::get('carrinho_entrega')[$request->frete]['price']);
         $data_venda = date('Y-m-d H:i:s');
 
@@ -113,6 +118,7 @@ class Carrinho extends Controller
 
 		$venda->CdVendedor		= 1;
 		$venda->CdCliente		= $cliente->CdCliente;
+		$venda->CdEntrega       = $entrega_banco[0]->CdEntrega;
 
 		$venda->TpCliente		= $cliente->TpCliente;
 		$venda->NmCliente		= $cliente->NmCliente;
@@ -128,6 +134,7 @@ class Carrinho extends Controller
 		$venda->CdMunicipioIBGE = $cliente_endereco->CdMunicipioIBGE;
 		$venda->CdUsuario		= 1;
 		$venda->DtAtualizacao	= $data_venda;
+        $venda->TxTransacao	=  $transacao;
 		$venda->save();
 		$nu_venda = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'),'NuCaixa' => Session::get('loja_caixa'),'CdCliente' => $cliente->CdCliente,'DtVenda' => $data_venda])->first();
 

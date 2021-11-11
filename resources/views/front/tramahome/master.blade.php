@@ -173,9 +173,14 @@
                             <nav class="main-navigation">
                                 <ul>
                                     <li  class="active"><a href="{{ route('front.home') }}">Home</a></li>
-                                    @foreach($departamentos as $dep)
-                                    <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
-                                    @endforeach
+
+                                    <li><a href="#">Produtos</a>
+                                        <ul class="mega-menu">
+                                            @foreach($departamentos as $dep)
+                                                <li class="p-2"><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
 
 
                                 </ul>

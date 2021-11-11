@@ -154,7 +154,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <a href="#"><img src="/assets/tramahome/img/trama_home.jpg" alt="instagram1"></a>
+                                <a <a href="https://instagram.com/tramahome" target="_blank"><img src="/assets/tramahome/img/trama_home.jpg" alt="instagram1"></a>
                             </div>
                         </div>
                     </div>

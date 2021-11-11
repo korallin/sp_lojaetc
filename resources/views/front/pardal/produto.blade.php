@@ -37,8 +37,11 @@
                             <div class="product_big_images-top">
                                 <div class="portfolio-full-image tab-content">
                                     <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-5">
-
-                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" title="{{ $item->NmProduto }}" alt="{{ $item->NmProduto }}" >
+                                        @if($item->NmFoto == '')
+                                            <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @else
+                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @endif
 
                                     </div>
 
@@ -208,31 +211,33 @@
                 <div class="product-slider row">
 
                     @foreach($produtos_outros as $item)
-                    <div class="col">
-                        <!-- single-product-wrap start -->
-                        <div class="single-product-wrap">
-                            <div class="product-image bloco-foto">
-                                <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}"><img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" alt="{{ $item->NmProduto }}"></a>
-                                <div class="product-action">
-                                    <a href="#" class="wishlist"><i class="icon-heart"></i></a>
-                                    <a href="#" class="add-to-cart"><i class="icon-handbag"></i></a>
-                                    <a href="#" class="quick-view" data-toggle="modal" data-target="#exampleModalCenter"><i class="icon-shuffle"></i></a>
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <!-- single-product-wrap start -->
+                            <div class="single-product-wrap">
+                                <div class="product-image bloco-foto">
+                                    <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}">
+                                        @if($item->NmFoto == '')
+                                            <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @else
+                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @endif
+                                    </a>
+                                    <div class="product-action">
+                                        <a href="#" class="wishlist d-none"><i class="icon-heart"></i></a>
+                                        <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="add-to-cart"><i class="icon-handbag"></i></a>
+                                        <a href="#" class="quick-view d-none" data-toggle="modal" data-target="#exampleModalCenter"><i class="icon-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <h3><a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="small">{{ $item->NmProduto }}</a></h3>
+                                    <div class="price-box">
+                                        <small>A partir de:</small><br>
+                                        <span class="new-price text-success">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="product-content">
-                                <h3><a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="small">{{ $item->NmProduto }}</a></h3>
-                                <div class="price-box">
-                                    @if($item->VlPrecoMax > $item->VlPrecoMin)
-                                        <span class="old-price text-danger">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</span>
-                                        <span class="new-price">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</span>
-                                    @else
-                                        <span class="new-price">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</span>
-                                    @endif
-                                </div>
-                            </div>
+                            <!-- single-product-wrap end -->
                         </div>
-                        <!-- single-product-wrap end -->
-                    </div>
                     @endforeach
 
 

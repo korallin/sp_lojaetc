@@ -37,13 +37,11 @@
                             <div class="product_big_images-top">
                                 <div class="portfolio-full-image tab-content">
                                     <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-5">
-
                                         @if($item->NmFoto == '')
                                             <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                         @else
                                             <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                         @endif
-
 
                                     </div>
 
@@ -75,46 +73,51 @@
 
                         </div>
                         <!-- pro_details end -->
-                        <!-- pro_dtl_prize start -->
-                        <ul class="pro_dtl_prize">
 
-                            @if($item->VlPrecoMax > $item->VlPrecoMin)
-                                <li class="old_prize">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
-                                <li class="new-price">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</li>
-                            @else
-                                <li class="new-price">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
-                            @endif
-
-                        </ul>
-                        <!-- pro_dtl_prize end -->
-                        <!-- pro_dtl_color start-->
-                        <div class="pro_dtl_color d-none">
-                            <h2 class="title_2">Choose Colour</h2>
-                            <ul class="pro_choose_color">
-                                <li class="red"><a href="#"><i class="ion-record"></i></a></li>
-                                <li class="blue"><a href="#"><i class="ion-record"></i></a></li>
-                                <li class="perpal"><a href="#"><i class="ion-record"></i></a></li>
-                                <li class="yellow"><a href="#"><i class="ion-record"></i></a></li>
-                            </ul>
-                        </div>
-                        <!-- pro_dtl_color end-->
-                        <!-- pro_dtl_size start -->
-                        <div class="pro_dtl_size d-none">
-                            <h2 class="title_2">Size</h2>
-                            <ul class="pro_choose_size">
-                                <li><a href="#">S</a></li>
-                                <li><a href="#">M</a></li>
-                                <li><a href="#">XL</a></li>
-                                <li><a href="#">XXL</a></li>
-                            </ul>
-                        </div>
                         <form action="{{ route('front.carrinho_add') }}" method="post">
 
                             @csrf
                             @method('post')
 
                             <input type="hidden" name="produto" value="{{$item->CdProduto}}">
-                            <input type="hidden" name="detalhe" value="1">
+
+                            @if(count($produto_detalhe) > 1)
+
+                                <div class="pro_dtl_size">
+                                    <h2 class="title_2">Escolha a variação</h2>
+                                    @foreach($produto_detalhe as $pd)
+                                        <div class="form-check" style="padding-left: 25px;">
+                                            <input class="form-check-input" type="radio" name="detalhe" id="detalhe_{{$pd->CdDetalhe}}" value="{{$pd->CdDetalhe}}" required>
+                                            <label class="form-check-label" style="padding-left: 0.25rem;" for="detalhe_{{$pd->CdDetalhe}}">
+                                                {{$pd->NmDetalhe}} - <span class="new-price text-success font-weight-bolder">R$ {{ number_format($pd->VlPromocional, 2, ',', '.') }}</span>
+                                            </label>
+                                        </div>
+
+                                    @endforeach
+
+                                </div>
+
+                            @else
+
+                                <ul class="pro_dtl_prize">
+
+                                    @if($item->VlPrecoMax > $item->VlPrecoMin)
+                                        <li class="old_prize">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
+                                        <li class="new-price">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</li>
+                                    @else
+                                        <li class="new-price">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
+                                    @endif
+
+                                </ul>
+
+                                <input type="hidden" name="detalhe" value="{{$produto_detalhe[0]->CdDetalhe}}">
+
+                        @endif
+
+                        <!-- pro_dtl_prize start -->
+
+                            <!-- pro_dtl_prize end -->
+
 
                             <!-- pro_dtl_size end -->
                             <!-- product-quantity-action start -->
@@ -122,11 +125,11 @@
                                 <div class="prodict-statas"><span>Quantidade :</span></div>
                                 <div class="product-quantity">
 
-                                        <div class="product-quantity">
-                                            <div class="cart-plus-minus">
-                                                <input value="1" type="number" name="quantidade" min="1" max="99">
-                                            </div>
+                                    <div class="product-quantity">
+                                        <div class="cart-plus-minus">
+                                            <input value="1" type="number" name="quantidade" min="1" max="99">
                                         </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -208,31 +211,33 @@
                 <div class="product-slider row">
 
                     @foreach($produtos_outros as $item)
-                    <div class="col">
-                        <!-- single-product-wrap start -->
-                        <div class="single-product-wrap">
-                            <div class="product-image bloco-foto">
-                                <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}"><img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" alt="{{ $item->NmProduto }}"></a>
-                                <div class="product-action">
-                                    <a href="#" class="wishlist"><i class="icon-heart"></i></a>
-                                    <a href="#" class="add-to-cart"><i class="icon-handbag"></i></a>
-                                    <a href="#" class="quick-view" data-toggle="modal" data-target="#exampleModalCenter"><i class="icon-shuffle"></i></a>
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <!-- single-product-wrap start -->
+                            <div class="single-product-wrap">
+                                <div class="product-image bloco-foto">
+                                    <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}">
+                                        @if($item->NmFoto == '')
+                                            <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @else
+                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @endif
+                                    </a>
+                                    <div class="product-action">
+                                        <a href="#" class="wishlist d-none"><i class="icon-heart"></i></a>
+                                        <a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="add-to-cart"><i class="icon-handbag"></i></a>
+                                        <a href="#" class="quick-view d-none" data-toggle="modal" data-target="#exampleModalCenter"><i class="icon-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <h3><a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="small">{{ $item->NmProduto }}</a></h3>
+                                    <div class="price-box">
+                                        <small>A partir de:</small><br>
+                                        <span class="new-price text-success">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="product-content">
-                                <h3><a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="small">{{ $item->NmProduto }}</a></h3>
-                                <div class="price-box">
-                                    @if($item->VlPrecoMax > $item->VlPrecoMin)
-                                        <span class="old-price text-danger">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</span>
-                                        <span class="new-price">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</span>
-                                    @else
-                                        <span class="new-price">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</span>
-                                    @endif
-                                </div>
-                            </div>
+                            <!-- single-product-wrap end -->
                         </div>
-                        <!-- single-product-wrap end -->
-                    </div>
                     @endforeach
 
 

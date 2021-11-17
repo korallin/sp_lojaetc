@@ -45,11 +45,24 @@ class Cliente extends Controller
         $dados['vendas'] = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdCliente' => Session::get('login')['login_id']])->orderBy('DtVenda', 'desc')->get();
 
         foreach($dados['vendas'] as $venda){
-            $dados['vendas_produtos'][$venda->CdVenda] = \App\Models\VendaProdutos::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdVenda' => $venda->CdVenda])->get();
+            $dados['vendas_produtos'][$venda->CdVenda] = DB::connection('mysql_loja')->select('
+
+                select  	VP.*, PR.CdUnidade, PR.NmProduto, PR.NuNcm, UN.NmUnidade, UN.StFracionario, PD.NmDetalhe,
+			(VP.QtVendida * VP.VlPreco) as VlPrecoTotal
+
+            from venda_produto VP
+            join produto_detalhe PD on (VP.CdProduto = PD.CdProduto and VP.CdDetalhe = PD.CdDetalhe)
+            join produto PR on (VP.CdProduto = PR.CdProduto)
+            join produto_unidade UN on (UN.CdUnidade = PR.CdUnidade)
+            where VP.CdEstabel = '.Session::get('loja_estabelecimento').'
+            and VP.Nucaixa = '.Session::get('loja_caixa').'
+            and VP.CdVenda = '.$venda->CdVenda.'
+            and VP.StItem = 1
+            order by VP.NuItem;
+
+            ');
             $dados['vendas_pagamento'][$venda->CdVenda] = \App\Models\VendaProdutos::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdVenda' => $venda->CdVenda])->get();
         }
-
-        //dd($dados['vendas_produtos']);
 
         $dados['pessoa'] = DB::connection('mysql_loja')->select('
             select * from cliente a
@@ -59,8 +72,8 @@ class Cliente extends Controller
         ', [Session::get('cliente')[0]->CdCliente]);
 
         $dados['pessoa_email'] = $dados['pessoa'][0];
-        $dados['pessoa_telefone'] = $dados['pessoa'][1];
-        $dados['pessoa_celular'] = $dados['pessoa'][0];
+        $dados['pessoa_telefone'] = $dados['pessoa'][0];
+        $dados['pessoa_celular'] = $dados['pessoa'][1];
         $dados['pessoa'] = $dados['pessoa'][0];
 
 
@@ -432,48 +445,44 @@ class Cliente extends Controller
         $pessoa->save();
 
 
-        /*
+
         //CELULAR
         $celular = \App\Http\Controllers\Auxiliar::l_int($request->NuCelular);
         if($celular != '') {
 
             $dadosCelular = \App\Models\ClienteTelefone::where('CdCliente', $pessoa->CdCliente)->where('NmTipoTelefone', 'CELULAR')->first();
 
-            if(!$dadosCelular){
-                $dadosCelular = new \App\Models\ClienteTelefone();
-                $dadosCelular->CdCliente = $pessoa->CdCliente;
-                $dadosCelular->NmTipoTelefone = 'CELULAR';
-                $dadosCelular->NuTelefone = $celular;
-                $dadosCelular->StPadrao = 1;
-                $dadosCelular->DtCadastro = date('Y-m-d H:i:s');
-                $dadosCelular->save();
-            } else {
-                $dadosCelular->NmTipoTelefone = 'CELULAR';
-                $dadosCelular->NuTelefone = $celular;
-                $dadosCelular->StPadrao = 1;
-                $dadosCelular->DtCadastro = date('Y-m-d H:i:s');
-                $dadosCelular->save();
+            if($dadosCelular){
+                $dCelular = \App\Models\ClienteTelefone::where('CdCliente', $pessoa->CdCliente)->where('NmTipoTelefone', 'CELULAR')->delete();
             }
+            $dadosCelular = new \App\Models\ClienteTelefone();
+            $dadosCelular->CdCliente = $pessoa->CdCliente;
+            $dadosCelular->NmTipoTelefone = 'CELULAR';
+            $dadosCelular->NuTelefone = $celular;
+            $dadosCelular->StPadrao = 1;
+            $dadosCelular->DtCadastro = date('Y-m-d H:i:s');
+            $dadosCelular->save();
+
+
         }
 
-        dd($dadosCelular);
-        //CELULAR
         $fixo = \App\Http\Controllers\Auxiliar::l_int($request->NuTelefone);
 
         if($fixo != '') {
             $dadosFixo = \App\Models\ClienteTelefone::where('CdCliente', $pessoa->CdCliente)->where('NmTipoTelefone', 'FIXO')->first();
-
-            if(!$dadosFixo){
-                $dadosFixo = new \App\Models\ClienteTelefone();
-                $dadosFixo->CdCliente = $pessoa->CdCliente;
-                $dadosFixo->NmTipoTelefone = 'FIXO';
-                $dadosFixo->NuTelefone = $fixo;
-                $dadosFixo->DtCadastro = date('Y-m-d H:i:s');
-                $dadosFixo->save();
+            if($dadosFixo){
+                $dFixo = \App\Models\ClienteTelefone::where('CdCliente', $pessoa->CdCliente)->where('NmTipoTelefone', 'FIXO')->delete();
             }
+            $dadosFixo = new \App\Models\ClienteTelefone();
+            $dadosFixo->CdCliente = $pessoa->CdCliente;
+            $dadosFixo->NmTipoTelefone = 'FIXO';
+            $dadosFixo->NuTelefone = $fixo;
+            $dadosFixo->DtCadastro = date('Y-m-d H:i:s');
+            $dadosFixo->save();
+
 
         }
-        */
+
         return redirect()->route('front.cliente_area')->with('sucesso','Cadastro editado com sucesso!');
 
     }

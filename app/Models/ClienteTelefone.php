@@ -13,4 +13,5 @@ class ClienteTelefone extends Model
     protected $primaryKey = ['CdTelefone','CdCliente'];
     public $incrementing = false;
     protected $table = 'cliente_telefone';
+    protected $fillable = ['CdTelefone','CdCliente','NmTipoTelefone'];
 }

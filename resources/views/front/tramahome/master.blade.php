@@ -50,6 +50,18 @@
         .my-floatzap{
             margin-top:16px;
         }
+
+        @media only screen and (max-width: 767px) {
+            .mobile-menu .mean-bar .meanmenu-reveal {
+                position: absolute;
+                right: 0;
+                top: -10px;
+                color: #000;
+                left: 23px;
+            }
+        }
+
+
     </style>
 
     <!-- Modernizer JS -->
@@ -168,29 +180,64 @@
                             <a href="{{ route('front.home') }}"><img src="/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/img/logo.png" alt="logo"></a>
                         </div>
                     </div>
-                    <div class="col-lg-8 d-none d-lg-block">
+                    <div class="col-lg-6 d-none d-lg-block">
                         <div class="main-menu-area text-center">
                             <nav class="main-navigation">
                                 <ul>
-                                    <li  class="active"><a href="{{ route('front.home') }}">Home</a></li>
+                                    @foreach($departamentos as $dep)
 
-                                    <li><a href="#">Produtos</a>
-                                        <ul class="mega-menu">
-                                            @foreach($departamentos as $dep)
-                                                <li class="p-2"><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
-                                            @endforeach
-                                        </ul>
-                                    </li>
+                                        @php
 
+                                            $departamentos1 = DB::connection('mysql_loja')->select('
+                                                select 	GX.CdDepartamento, GR.CdDepartamento, GR.CdDepartamentoPai,
+                                                GR.CdDepartamento as CdGrupo,
+                                                GR.NmDepartamento as NmGrupo
+                                                from produto PR
+                                                join produto_estoque PE on (PE.CdProduto = PR.CdProduto and PE.CdEstabel = ? and PE.QtEstoque > 0 )
+                                                join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
+                                                join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
+                                                where PR.DtDesativacao is null
+                                                and PR.StLojaVirtual = 1
+                                                and GR.CdDepartamentoPai = ?
+                                                group by CdGrupo
+                                                order by NmGrupo;
+                                            ', [Session::get('loja_estabelecimento'), $dep->CdGrupo]);
+
+                                        @endphp
+
+                                        @if($departamentos1)
+
+                                        <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a>
+                                            <ul class="mega-menu">
+
+                                                @foreach($departamentos1 as $dep1)
+                                                    <li class="p-2"><a href="{{route('front.departamento',[$dep1->CdGrupo,Illuminate\Support\Str::slug($dep1->NmGrupo)])}}">{{ $dep1->NmGrupo }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+
+                                        @else
+                                            <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+                                        @endif
+                                    @endforeach
 
                                 </ul>
                             </nav>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-7 col-7">
-                        <div class="right-blok-box d-flex">
-                            <div class="search-wrap">
-                                <a href="#" class="trigger-search"><i class="icon-magnifier"></i></a>
+                    <div class="col-lg-4 col-md-7 col-7">
+                        <div class="right-blok-box d-flex align-items-center">
+                            <div class="search-wrap d-none d-md-block d-lg-block d-xl-block">
+                                <form action="{{ route('front.busca') }}" method="get">
+                                    @csrf
+                                    @method('get')
+                                    <div class="input-group">
+                                        <input id="search" name="busca" class="form-control" value="" placeholder="Busque na loja ..." type="search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-link" type="button"><i class="icon-magnifier"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
 
                             <div class="user-wrap">
@@ -240,8 +287,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="mobile-menu d-block d-lg-none"></div>
+
+                    <div class="d-md-none d-lg-none d-xl-none">
+                        <div class="right-blok-box d-flex align-items-center">
+                            <div class="">
+                                <form action="{{ route('front.busca') }}" method="get">
+                                    @csrf
+                                    @method('get')
+                                    <div class="input-group">
+                                        <input id="search" name="busca" class="form-control" value="" placeholder="Busque na loja ..." type="search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-link" type="button"><i class="icon-magnifier"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="">
+                                <div class="mobile-menu d-block d-lg-none"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

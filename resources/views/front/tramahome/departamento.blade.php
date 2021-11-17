@@ -39,7 +39,40 @@
                             <h4 class="title">CATEGORIAS</h4>
                             <ul>
                                 @foreach($departamentos as $dep)
-                                    <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+
+                                    @php
+
+                                        $departamentos1 = DB::connection('mysql_loja')->select('
+                                            select 	GX.CdDepartamento, GR.CdDepartamento, GR.CdDepartamentoPai,
+                                            GR.CdDepartamento as CdGrupo,
+                                            GR.NmDepartamento as NmGrupo
+                                            from produto PR
+                                            join produto_estoque PE on (PE.CdProduto = PR.CdProduto and PE.CdEstabel = ? and PE.QtEstoque > 0 )
+                                            join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
+                                            join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
+                                            where PR.DtDesativacao is null
+                                            and PR.StLojaVirtual = 1
+                                            and GR.CdDepartamentoPai = ?
+                                            group by CdGrupo
+                                            order by NmGrupo;
+                                        ', [Session::get('loja_estabelecimento'), $dep->CdGrupo]);
+
+                                    @endphp
+
+                                    @if($departamentos1)
+
+                                        <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}"><b>{{ $dep->NmGrupo }}</b></a>
+                                            <ul class="mega-menu">
+
+                                                @foreach($departamentos1 as $dep1)
+                                                    <li class="p-2"><a href="{{route('front.departamento',[$dep1->CdGrupo,Illuminate\Support\Str::slug($dep1->NmGrupo)])}}">{{ $dep1->NmGrupo }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+
+                                    @else
+                                        <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}"><b>{{ $dep->NmGrupo }}</b></a></li>
+                                    @endif
                                 @endforeach
                             </ul>
                         </div>

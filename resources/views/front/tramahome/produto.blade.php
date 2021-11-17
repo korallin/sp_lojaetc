@@ -34,19 +34,49 @@
                     <div class="product-details-images">
                         <div class="product_details_container">
                             <!-- product_big_images start -->
+
                             <div class="product_big_images-top">
                                 <div class="portfolio-full-image tab-content">
-                                    <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-5">
-                                        @if($item->NmFoto == '')
-                                            <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
-                                        @else
-                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
-                                        @endif
 
-                                    </div>
+                                        <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-0">
+                                            <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}" class="">
+                                                @if($item->NmFoto == '')
+                                                    <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                                @else
+                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}"  class="" id ="zoom0" data-cloudzoom='
+                                                        zoomSizeMode:"image",
+                                                        autoInside: 550
+                                                    '>
+                                                @endif
+                                            </a>
+                                        </div>
+                                        @foreach($produto_fotos as $foto)
+                                            <div role="tabpanel" class="tab-pane product-image-position" id="img-tab-{{$foto->CdFoto}}">
+                                                <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" class="">
+                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" alt="{{$item->NmProduto}}" class="cloudzoom" id ="zoom{{$foto->CdFoto}}" data-cloudzoom='
+                                                        zoomSizeMode:"image",
+                                                        autoInside: 550
+                                                    '>
+                                                </a>
+                                            </div>
+                                        @endforeach
 
                                 </div>
                             </div>
+
+                            <!-- Start Small images -->
+                            <ul class="product_small_images-bottom horizantal-product-active nav" role="tablist">
+                                @foreach($produto_fotos as $foto)
+                                    <li role="presentation" class="pot-small-img active">
+                                        <a href="#img-tab-{{$foto->CdFoto}}" role="tab" data-toggle="tab">
+                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        </a>
+                                    </li>
+                                @endforeach
+
+
+                            </ul>
+                            <!-- End Small images -->
 
 
                         </div>
@@ -275,6 +305,8 @@
             });
             $(window).trigger('resize');
         });
+
+
 
     </script>
 @endsection

@@ -22,22 +22,16 @@ class Controller extends BaseController
         //dump($_SESSION['lojaetc_id'],session()->getId());
 
         $departamentos = DB::connection('mysql_loja')->select('
-
-            select 	GX.CdDepartamento, GR.CdDepartamento, GR.CdDepartamentoPai, GR.NmDepartamento as nome_departamento, SG.NmDepartamento,
-			if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, GR.CdDepartamento ) as CdGrupo,
-			if(GR.CdDepartamentoPai is not null, SG.NmDepartamento, GR.NmDepartamento ) as NmGrupo
-            from produto PR
-            join produto_estoque PE on (PE.CdProduto = PR.CdProduto and PE.CdEstabel = ? and PE.QtEstoque > 0 )
-            join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
-            join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
-            left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
-            where PR.DtDesativacao is null
-            and PR.StLojaVirtual = 1
-
+            select 	GR.CdDepartamento, GR.CdDepartamentoPai,
+			GR.CdDepartamento as CdGrupo,
+			GR.NmDepartamento as NmGrupo
+            from produto_departamento GR
+            where GR.CdDepartamentoPai is null
             group by CdGrupo
             order by NmGrupo;
-
         ', [Session::get('loja_estabelecimento')]);
+
+
 
         $produtos_populares = DB::connection('mysql_loja')->select('
 

@@ -114,8 +114,9 @@
                                 <div class="cart-page-total">
                                     <h2>TOTAIS</h2>
                                     <ul>
-                                        <li>Subtotal <span>R$ {{ number_format($dado_carrinho['cart_total'], 2, ',', '.') }}</span></li>
-                                        <li>Total <span> R$ {{ number_format(($dado_carrinho['cart_total']+$dado_carrinho['cart_frete']), 2, ',', '.') }}</span></li>
+                                        <li>Subtotal <span>R$&nbsp;&nbsp;{{ number_format($dado_carrinho['cart_total'], 2, ',', '.') }}</span></li>
+                                        <li>Entrega <span>R$&nbsp;&nbsp;<span class="t_frete">{{ number_format($dado_carrinho['cart_frete'], 2, ',', '.') }}</span></span></li>
+                                        <li>Total <span> R$&nbsp;&nbsp;<span class="t_total">{{ number_format(($dado_carrinho['cart_total']+$dado_carrinho['cart_frete']), 2, ',', '.') }}</span></span></li>
                                     </ul>
                                     <a href="{{ route('front.checkout') }}" class="proceed-checkout-btn">FECHAR MINHA COMPRA</a>
                                 </div>
@@ -140,6 +141,16 @@
         $('.telefone').mask('(00) 0000-0000');
         $('.celular').mask('(00) 0 0000-0000');
         $('.cpf').mask('000.000.000-00');
+
+        function format_real(n, currency = ' ') {
+            return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\,)/g, '$1.');
+        }
+
+        function convertMoneyValue(number){
+            number = parseFloat((number/100)).toFixed(2);
+            return (new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(number));
+        }
+
 
         $( "input[name=NuCep]" ).focusout(function(){
             var w_cep = $(this).val();
@@ -170,11 +181,23 @@
 
                                 if(data != '0'){
                                     $.each( obj, function( i, elem ) {
+
+
+
                                         if(elem.carrier == 'Correios'){
-                                            $('#frete').append("<b>"+elem.carrier_description+' - R$'+elem.price+'</b><br>Prazo estimado: '+elem.deliveryTime+' dia(s)<hr>');
+                                            $('#frete').append("<div class='total' style='cursor: pointer;' data-frete='"+elem.price+"'><b>"+elem.carrier_description+' - R$'+elem.price+'</b><br>Prazo estimado: '+elem.deliveryTime+' dia(s)</div><hr>');
                                         } else {
-                                            $('#frete').append("<b>"+elem.carrier+' - R$'+elem.price+'</b><br>Prazo estimado: '+elem.deliveryTime+' dia(s)<hr>');
+                                            $('#frete').append("<div class='total' style='cursor: pointer;' data-frete='"+elem.price+"'><b>"+elem.carrier+' - R$'+elem.price+'</b><br>Prazo estimado: '+elem.deliveryTime+' dia(s)</div><hr>');
                                         }
+
+                                    });
+
+                                    $('div.total').click(function(e){
+                                        var w_total = {{$dado_carrinho['cart_total']}};
+                                        var w_frete = $(this).data('frete');
+                                        w_total = (w_frete + w_total);
+                                        $('.t_frete').text(w_frete);
+                                        $('.t_total').text(w_total);
 
                                     });
 

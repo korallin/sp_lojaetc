@@ -153,28 +153,36 @@
                                                                         <thead>
                                                                         <tr>
                                                                             <th class="product-name text-left">Produto</th>
-                                                                            <th class="product-total text-right">Total</th>
+                                                                            <th class="product-total text-right">Total&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
 
                                                                         @foreach($dados['vendas_produtos'][$venda->CdVenda] as $itens)
-                                                                            @foreach($itens as $item)
+
                                                                             <tr class="cart_item">
                                                                                 <td class="product-name text-left">
-                                                                                    #Nome do produto
+                                                                                    {{ $itens->NmProduto }} {{ $itens->NmDetalhe }}
                                                                                 </td>
                                                                                 <td class="product-total text-right">
-                                                                                    X 1 R$ xxx,xx
+                                                                                    X {{ $itens->QtVendida }} R$ {{ number_format(($itens->VlPreco*$itens->QtVendida), 2, ',', '.') }}&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                 </td>
                                                                             </tr>
-                                                                            @endforeach
+
                                                                         @endforeach
                                                                         </tbody>
                                                                         <tfoot>
                                                                         <tr class="cart-subtotal">
-                                                                            <th class=" text-right">Subtotal</th>
-                                                                            <th class="text-right"><span class="amount">R$ {{ number_format(\Illuminate\Support\Facades\Session::get('carrinho_total'), 2, ',', '.') }}</span></th>
+                                                                            <th class=" text-right font-weight-bold">Subtotal</th>
+                                                                            <th class="text-right"><span class="amount">R$ {{ number_format($venda->VlProduto, 2, ',', '.') }}</span>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                                        </tr>
+                                                                        <tr class="cart-subtotal">
+                                                                            <th class=" text-right font-weight-bold">Entrega</th>
+                                                                            <th class="text-right"><span class="amount">R$ {{ number_format($venda->VlFrete, 2, ',', '.') }}</span>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                                        </tr>
+                                                                        <tr class="cart-subtotal">
+                                                                            <th class=" text-right font-weight-bold">TOTAL</th>
+                                                                            <th class="text-right"><span class="amount">R$ {{ number_format($venda->VlVenda, 2, ',', '.') }}</span>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                                                         </tr>
 
                                                                         </tfoot>

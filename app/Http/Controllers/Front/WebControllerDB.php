@@ -68,6 +68,7 @@ class WebControllerDB extends Controller
     public function departamento(Request $request, $id,$nome)
     {
 
+        /*
         $departamento = DB::connection('mysql_loja')->select('
 
             select 	GX.CdDepartamento, GR.CdDepartamento, GR.CdDepartamentoPai, GR.NmDepartamento as nome_departamento, SG.NmDepartamento,
@@ -79,11 +80,22 @@ class WebControllerDB extends Controller
             join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
             left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
             where PR.DtDesativacao is null
-            and if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, GR.CdDepartamento ) = ?
+            and if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, SG.CdDepartamento ) = ?
             group by CdGrupo
             order by NmGrupo;
 
         ', [Session::get('loja_estabelecimento'), $id]);
+        */
+
+        $departamento = DB::connection('mysql_loja')->select('
+
+            select
+			GR.CdDepartamento as CdGrupo,
+			GR.NmDepartamento as NmGrupo
+            from produto_departamento GR
+            where GR.CdDepartamento = ?
+
+        ', [$id]);
 
         $produtos = DB::connection('mysql_loja')->select('
 
@@ -99,13 +111,11 @@ class WebControllerDB extends Controller
         left join produto_foto PF on (PF.CdProduto = PR.CdProduto and PF.StPrincipal = 1)
 
         join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
-        join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
-        left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
 
         where PR.DtDesativacao is null
           and PR.StLojaVirtual = 1
         and PP.CdTabela in (?)
-        and if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, GR.CdDepartamento ) = ?
+        and GX.CdDepartamento = ?
 
         group by PR.CdProduto
         order by
@@ -227,6 +237,13 @@ class WebControllerDB extends Controller
 
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'),$id]);
 
+        $produtos_fotos = DB::connection('mysql_loja')->select('
+            select * from produto_foto
+            where CdProduto = ?
+            order by StPrincipal desc
+
+        ', [$id]);
+
 
 
         $produto_detalhe = DB::connection('mysql_loja')->select('
@@ -284,7 +301,7 @@ class WebControllerDB extends Controller
 
         //dd($paginacao);
 
-        return view($view, ['produtos' => $produtos, 'produto_detalhe' => $produto_detalhe, 'produtos_outros' => $produtos_outros, 'request' => $request]);
+        return view($view, ['produtos' => $produtos, 'produto_detalhe' => $produto_detalhe, 'produto_fotos' => $produtos_fotos, 'produtos_outros' => $produtos_outros, 'request' => $request]);
 
     }
 

@@ -181,15 +181,16 @@
 
                                 if(data != '0'){
                                     $.each( obj, function( i, elem ) {
-
-
-
                                         if(elem.carrier == 'Correios'){
                                             $('#frete').append("<div class='total' style='cursor: pointer;' data-frete='"+elem.price+"'><b>"+elem.carrier_description+' - R$'+elem.price+'</b><br>Prazo estimado: '+elem.deliveryTime+' dia(s)</div><hr>');
                                         } else {
                                             $('#frete').append("<div class='total' style='cursor: pointer;' data-frete='"+elem.price+"'><b>"+elem.carrier+' - R$'+elem.price+'</b><br>Prazo estimado: '+elem.deliveryTime+' dia(s)</div><hr>');
                                         }
-
+                                        var w_total = {{$dado_carrinho['cart_total']}};
+                                        var w_frete = elem.price;
+                                        w_total = (w_frete + w_total);
+                                        $('.t_frete').text(w_frete);
+                                        $('.t_total').text(w_total);
                                     });
 
                                     $('div.total').click(function(e){

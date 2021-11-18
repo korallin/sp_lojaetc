@@ -109,13 +109,11 @@ class WebControllerDB extends Controller
         join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
         left join produto_foto PF on (PF.CdProduto = PR.CdProduto and PF.StPrincipal = 1)
-
         join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
-
         where PR.DtDesativacao is null
-          and PR.StLojaVirtual = 1
-        and PP.CdTabela in (?)
-        and GX.CdDepartamento = ?
+            and PR.StLojaVirtual = 1
+            and PP.CdTabela in (?)
+            and GX.CdDepartamento = ?
 
         group by PR.CdProduto
         order by

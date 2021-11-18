@@ -11,7 +11,7 @@
 
     @foreach($produtos as $item)
     <!-- breadcrumb-area start -->
-    <div class="breadcrumb-area section-ptb" style="background: #ccc; height: 50px; padding: 15px;">
+    <div class="breadcrumb-area section-ptb" style="background: #ccc; height: auto; padding: 15px;">
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -53,7 +53,7 @@
                                         @foreach($produto_fotos as $foto)
                                             <div role="tabpanel" class="tab-pane product-image-position" id="img-tab-{{$foto->CdFoto}}">
                                                 <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" class="">
-                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" alt="{{$item->NmProduto}}" class="cloudzoom" id ="zoom{{$foto->CdFoto}}" data-cloudzoom='
+                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" alt="{{$item->NmProduto}}" class="" id ="zoom{{$foto->CdFoto}}" data-cloudzoom='
                                                         zoomSizeMode:"image",
                                                         autoInside: 550
                                                     '>
@@ -67,7 +67,7 @@
                             <!-- Start Small images -->
                             <ul class="product_small_images-bottom horizantal-product-active nav" role="tablist">
                                 @foreach($produto_fotos as $foto)
-                                    <li role="presentation" class="pot-small-img active">
+                                    <li role="presentation" class="pot-small-img" style="width: 128px !important;">
                                         <a href="#img-tab-{{$foto->CdFoto}}" role="tab" data-toggle="tab">
                                             <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                         </a>

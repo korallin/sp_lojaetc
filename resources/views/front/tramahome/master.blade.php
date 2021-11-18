@@ -61,6 +61,10 @@
             }
         }
 
+        .breadcrumb-area {
+            height: auto;
+        }
+
 
     </style>
 

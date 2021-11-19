@@ -123,17 +123,18 @@
         <div class="header-top">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3 col-sm-6">
-                        <p>Você está na Pardal Tec </p>
 
-                    </div>
                     <div class="col-md-4 col-sm-6">
                         <p> <a href="#"> <i class="fab fa-whatsapp"></i> + 55 24 2248-3799</a> </p>
                     </div>
-                    <div class="col-md-5 col-sm-6">
+                    <div class="col-md-8 col-sm-6">
                         <!-- language-currency-wrapper start -->
                         <div class="language-currency-wrapper">
                             <ul>
+
+                                <li class="drodown-show"><a href="{{ route('front.home') }}">Home</a></li>
+                                <li class="drodown-show"><a href="{{ route('front.paginas', [1,'quem-somos']) }}">Quem Somos</a></li>
+                                <li class="drodown-show"><a href="{{ route('front.faleconosco') }}">Fale Conosco</a></li>
 
                                 <li class="drodown-show"><a href="https://twitter.com/Pardaltec" target="_blank"><i class="ion-social-twitter"></i></a></li>
                                 <li class="drodown-show"><a href="https://www.youtube.com/channel/UCEOsKJlaL6Ir1i9oeE0WNDw" target="_blank"><i class="ion-social-youtube"></i></a></li>
@@ -170,30 +171,66 @@
                             <a href="{{ route('front.home') }}"><img src="/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/img/pardal-logo.png" alt="logo"></a>
                         </div>
                     </div>
-                    <div class="col-lg-8 d-none d-lg-block">
+                    <div class="col-lg-5 d-none d-lg-block">
                         <div class="main-menu-area text-center">
                             <nav class="main-navigation">
                                 <ul>
-                                    <li  class="active"><a href="{{ route('front.home') }}">Home</a></li>
-                                    <li><a href="{{ route('front.paginas', [1,'quem-somos']) }}">Quem Somos</a></li>
-                                    <li><a href="#">Produtos</a>
-                                        <ul class="mega-menu">
-                                            @foreach($departamentos as $dep)
-                                            <li class="p-2"><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
-                                            @endforeach
-                                        </ul>
-                                    </li>
-                                    <li><a href="{{ route('front.faleconosco') }}">Fale Conosco</a></li>
+
+                                    @foreach($departamentos as $dep)
+
+                                        @php
+
+                                            $departamentos1 = DB::connection('mysql_loja')->select('
+                                                select 	GR.CdDepartamento as CdSubGrupo, GR.CdDepartamentoPai as CdGrupo, GR.NmDepartamento as NmSubGrupo
+                                                from produto PR
+                                                join produto_estoque PE on (PE.CdProduto = PR.CdProduto and PE.CdEstabel = ?  )
+                                                join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
+                                                join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
+                                                where PR.DtDesativacao is null
+                                                and GR.StDepartamento = 1
+
+                                                and GR.CdDepartamentoPai = ?
+
+                                                group by GX.CdDepartamento
+                                                order by GR.NmDepartamento;
+                                            ', [Session::get('loja_estabelecimento'), $dep->CdGrupo]);
+
+                                        @endphp
+
+                                        @if($departamentos1)
+
+                                            <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a>
+                                                <ul class="mega-menu">
+
+                                                    @foreach($departamentos1 as $dep1)
+                                                        <li class="p-2"><a href="{{route('front.departamento',[$dep1->CdSubGrupo,Illuminate\Support\Str::slug($dep1->NmSubGrupo)])}}">{{ $dep1->NmSubGrupo }}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
+
+                                        @else
+                                            <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+                                        @endif
+                                    @endforeach
+
                                 </ul>
                             </nav>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-7 col-7">
-                        <div class="right-blok-box d-flex">
-                            <div class="search-wrap">
-                                <a href="#" class="trigger-search"><i class="icon-magnifier"></i></a>
+                    <div class="col-lg-5 col-md-7 col-7">
+                        <div class="right-blok-box d-flex align-items-center">
+                            <div class="search-wrap d-none d-md-block d-lg-block d-xl-block">
+                                <form action="{{ route('front.busca') }}" method="get">
+                                    @csrf
+                                    @method('get')
+                                    <div class="input-group">
+                                        <input id="search" name="busca" class="form-control" value="" placeholder="Busque na loja ..." type="search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-link" type="button"><i class="icon-magnifier"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-
                             <div class="user-wrap">
                                 @if(\Illuminate\Support\Facades\Session::get('login_status') == 0)
                                     <a href="{{ route('front.login') }}"><i class="icon-user"></i></a>
@@ -240,8 +277,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="mobile-menu d-block d-lg-none"></div>
+                    <div class="d-md-none d-lg-none d-xl-none">
+                        <div class="right-blok-box d-flex align-items-center">
+                            <div class="">
+                                <form action="{{ route('front.busca') }}" method="get">
+                                    @csrf
+                                    @method('get')
+                                    <div class="input-group">
+                                        <input id="search" name="busca" class="form-control" value="" placeholder="Busque na loja ..." type="search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-link" type="button"><i class="icon-magnifier"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="">
+                                <div class="mobile-menu d-block d-lg-none"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

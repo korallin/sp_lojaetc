@@ -140,7 +140,18 @@ class WebControllerDB extends Controller
 
         //dd($paginacao);
 
-        return view($view, ['produtos' => $produtos, 'departamento' => $departamento, 'request' => $request]);
+        $banners = DB::connection('mysql_loja')->select('
+            select * from publicidade
+            where CdEstabel = '.Session::get('loja_estabelecimento').'
+            and StPublicidade = 1
+            and CdTipo = 1
+            and DtInicial <= now()
+            and DtFinal >= now()
+            and CdDepartamentoLista = ?
+            order by rand() limit 1;
+        ', [$id]);
+
+        return view($view, ['produtos' => $produtos, 'departamento' => $departamento, 'request' => $request, 'banners' => $banners]);
 
     }
 

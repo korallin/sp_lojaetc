@@ -41,6 +41,7 @@ if (strpos(request()->getHttpHost(),"pardal") !== false) {
     Session::put('loja_cielo_merchantid', '7d514873-b94e-429f-baa0-d8108f816bc4');
     Session::put('loja_cielo_softdescriptor', 'PARDALTEC');
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/pardal/produto/');
+    Session::put('loja_banners', 'https://d.spcommerce.com.br/pardal/publicidade/');
 
     /*
 

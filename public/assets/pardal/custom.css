@@ -25,14 +25,14 @@
 }
 
 .breadcrumb-area {
-    background: url(/assets/pardal/img/banner-01.jpg);
+    background-color: #026237;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
     position: relative;
     background-attachment: fixed;
     text-align: center;
-    height: 150px;
+    height: auto;
 }
 
 .testimonial-bg {

@@ -10,76 +10,26 @@
 
 @section('content')
 
-    <!-- Hero Slider Start -->
-    <div class="hero-slider hero-slider-one ">
-        <!-- Single Slide Start -->
-        <div class="single-slide" style="background-image: url(/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/img/banner-01.jpg)">
-            <!-- Hero Content One Start -->
-            <div class="hero-content-one container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-8" style="background: #fff; opacity: 0.8; padding: 20px; border-radius: 15px;">
-                        <div class="slider-text-info pt-0">
-                            <h3>Desidratador PE 15 Gourmet</h3>
-                            <p>IDEAL PARA DESIDRATAR APROXIMADAMENTE 14 KG DE BANANA IN NATURA.</p>
-                            <a href="shop.html" class="btn slider-btn uppercase"><span>VER AGORA</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Hero Content One End -->
-        </div>
-        <!-- Single Slide End -->
+    @if($banners)
+        <!-- Hero Slider Start -->
+        <div class="hero-slider hero-slider-one ">
 
-        <div class="single-slide" style="background-image: url(/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/img/banner-02.jpg)">
-            <!-- Hero Content One Start -->
-            <div class="hero-content-one container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-8" style="background: #fff; opacity: 0.8; padding: 20px; border-radius: 15px;">
-                        <div class="slider-text-info pt-0">
-                            <h3>Desidratador New Hobby Branco Digital</h3>
-                            <p>ECONÔMICO. DESIGN MODERNO. TERMÔMETRO E TERMOSTATO DIGITAL. IDEAL PARA CRUDÍVOROS.</p>
-                            <a href="shop.html" class="btn slider-btn uppercase"><span>VER AGORA</span></a>
-                        </div>
+        @foreach($banners as $banner)
+            <!-- Single Slide Start -->
+                <div class="single-slide" style="height: auto;">
+                    <!-- Hero Content One Start -->
+                    <div class="hero-content-one text-center w-100">
+                        <img src="{{\Illuminate\Support\Facades\Session::get('loja_banners')}}{{ $banner->NmPublicidade }}" class="img-fluid" style="display: initial;">
                     </div>
+                    <!-- Hero Content One End -->
                 </div>
-            </div>
-            <!-- Hero Content One End -->
-        </div>
+                <!-- Single Slide End -->
+            @endforeach
 
-        <div class="single-slide" style="background-image: url(/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/img/banner-03.jpg)">
-            <!-- Hero Content One Start -->
-            <div class="hero-content-one container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-8" style="background: #fff; opacity: 0.8; padding: 20px; border-radius: 15px;">
-                        <div class="slider-text-info pt-0">
-                            <h3>Desidratador New Hobby Inox Digital</h3>
-                            <p>ECONÔMICO. DESIGN MODERNO. TERMÔMETRO E TERMOSTATO DIGITAL. IDEAL PARA CRUDÍVOROS.</p>
-                            <a href="shop.html" class="btn slider-btn uppercase"><span>VER AGORA</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Hero Content One End -->
-        </div>
 
-        <div class="single-slide" style="background-image: url(/assets/{{\Illuminate\Support\Facades\Session::get('loja')}}/img/banner-04.jpg)">
-            <!-- Hero Content One Start -->
-            <div class="hero-content-one container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-8" style="background: #fff; opacity: 0.8; padding: 20px; border-radius: 15px;">
-                        <div class="slider-text-info pt-0">
-                            <h3>Desidratador PE 200</h3>
-                            <p>Ideal para 200 Kg de banana in natura.</p>
-                            <a href="shop.html" class="btn slider-btn uppercase"><span>VER AGORA</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Hero Content One End -->
         </div>
-
-    </div>
-    <!-- Hero Section End -->
+        <!-- Hero Section End -->
+    @endif
 
 
 

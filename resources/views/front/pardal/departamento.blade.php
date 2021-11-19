@@ -10,15 +10,15 @@
 
 @section('content')
 
-    <div class="breadcrumb-area section-ptb">
+    <div class="breadcrumb-area section-ptb" @if($banners) style="background: url('{{\Illuminate\Support\Facades\Session::get('loja_banners')}}{{ $banners[0]->NmPublicidade }}')" @endif>
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <h2 class="breadcrumb-title">{{ $departamento[0]->NmGrupo }}</h2>
+                    <h2 class="breadcrumb-title mt-0 text-light">{{ $departamento[0]->NmGrupo }}</h2>
                     <!-- breadcrumb-list start -->
                     <ul class="breadcrumb-list">
-                        <li class="breadcrumb-item"><a href="{{ route('front.home') }}">Home</a></li>
-                        <li class="breadcrumb-item active">{{ $departamento[0]->NmGrupo }}</li>
+                        <li class="breadcrumb-item"><a class=" text-light" href="{{ route('front.home') }}">Home</a></li>
+                        <li class="breadcrumb-item active  text-light">{{ $departamento[0]->NmGrupo }}</li>
                     </ul>
                     <!-- breadcrumb-list end -->
                 </div>
@@ -38,7 +38,44 @@
                             <h4 class="title">CATEGORIAS</h4>
                             <ul>
                                 @foreach($departamentos as $dep)
-                                    <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a></li>
+
+                                    @php
+
+                                        $departamentos1 = DB::connection('mysql_loja')->select('
+
+                                            select 	GR.CdDepartamento as CdSubGrupo, GR.CdDepartamentoPai as CdGrupo, GR.NmDepartamento as NmSubGrupo
+                                            from produto PR
+                                            join produto_estoque PE on (PE.CdProduto = PR.CdProduto and PE.CdEstabel = ?  )
+                                            join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
+                                            join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
+                                            where PR.DtDesativacao is null
+                                            and PR.StLojaVirtual = 1
+                                            and GR.StDepartamento = 1
+
+
+                                            and GR.CdDepartamentoPai = ?
+
+                                            group by GX.CdDepartamento
+                                            order by GR.NmDepartamento;
+
+                                        ', [Session::get('loja_estabelecimento'), $dep->CdGrupo]);
+
+                                    @endphp
+
+                                    @if($departamentos1)
+
+                                        <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}"><b>{{ $dep->NmGrupo }}</b></a>
+                                            <ul class="mega-menu">
+
+                                                @foreach($departamentos1 as $dep1)
+                                                    <li class="p-2"><a href="{{route('front.departamento',[$dep1->CdSubGrupo,Illuminate\Support\Str::slug($dep1->NmSubGrupo)])}}">{{ $dep1->NmSubGrupo }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+
+                                    @else
+                                        <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}"><b>{{ $dep->NmGrupo }}</b></a></li>
+                                    @endif
                                 @endforeach
                             </ul>
                         </div>

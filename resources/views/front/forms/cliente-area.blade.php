@@ -115,6 +115,10 @@
                                                     <td>{{ date('d/m/Y') }}</td>
                                                     <td>
                                                         @if($venda->CdSituacao == 1) <span class="badge badge-info">Recebido</span> @endif
+                                                        @if($venda->CdSituacao == 2) <span class="badge badge-primary">Pagamento Confirmado</span> @endif
+                                                        @if($venda->CdSituacao == 3) <span class="badge badge-secondary">Enviado</span> @endif
+                                                        @if($venda->CdSituacao == 4) <span class="badge badge-success">Finalizado </span> @endif
+                                                        @if($venda->CdSituacao == 9) <span class="badge badge-danger">Cancelado</span> @endif
                                                     </td>
                                                     <td>R$ {{ number_format($venda->VlVenda, 2, ',', '.') }}</td>
                                                     <td><button onclick="$('#det-{{$venda->CdVenda}}').toggle()" class="view">Ver</button></td>

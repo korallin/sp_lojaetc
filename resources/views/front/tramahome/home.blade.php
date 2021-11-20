@@ -150,7 +150,7 @@
                 <div class="col-lg-6 offset-lg-1">
                     <div class="instagram-wrapper">
                         <div class="instaram-title text-center">
-                            <h3>Siga-nos no Instagram <a href="#">@tramahome</a></h3>
+                            <h3>Siga-nos no Instagram <a href="#">@trama.home</a></h3>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">

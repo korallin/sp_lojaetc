@@ -38,7 +38,7 @@
 
                     @if($dados['espelho']['venda_modalidade']->CdModalidade == '8')
                         <p>Os dados para deposito e/ou transferência são:</p>
-                        <p>{{ $dados['espelho']['venda_modalidade']->TxPagamento }}</p>
+                        <p>{{ nl2br($dados['espelho']['venda_modalidade']->TxPagamento) }}</p>
                     @else
                         <p>TID <b>{{ $dados['retorno_id'] }}</b></p>
                     @endif

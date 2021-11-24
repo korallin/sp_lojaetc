@@ -1571,10 +1571,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   right: 0;
   background: #333;
   top: 125%;
-  width: 100px;
+  width: 80px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  width: 110px;
+  width: 80px;
   opacity: 0;
   -ms-filter: 0;
   visibility: hidden;

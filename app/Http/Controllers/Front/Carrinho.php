@@ -204,6 +204,7 @@ class Carrinho extends Controller
         $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id']))->delete();
         $dados['retorno_id'] = 'Em processamento';//$request->retorno_recibo;
         $dados['espelho'] = Session::get('espelho');
+        dd($dados);
         return view('front.forms.recibo', ['dados' => $dados]);
     }
 

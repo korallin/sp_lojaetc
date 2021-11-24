@@ -34,6 +34,8 @@
                     <p>Agradecemos seu pedido, assim que o pagamento for confirmado vamos iniciar a separação dos itens.</p>
                     <p>Seu pedido em nossa loja é <b>{{ $dados['espelho']['venda']->CdVenda }}</b></p>
 
+
+
                     @if($dados['espelho']['venda_pagamento'][0]->CdModalidade == '8')
                         <p>Os dados para deposito e/ou transferência são:</p>
                         <p>{{ $dados['espelho']['venda_pagamento'][0]->TxPagamento }}</p>

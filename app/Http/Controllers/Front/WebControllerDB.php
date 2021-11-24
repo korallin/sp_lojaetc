@@ -239,6 +239,8 @@ class WebControllerDB extends Controller
 
         ', [$id]);
 
+        dd($produtos_fotos);
+
 
 
         $produto_detalhe = DB::connection('mysql_loja')->select('

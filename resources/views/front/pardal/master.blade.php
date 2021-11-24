@@ -149,19 +149,24 @@
                                 <li class="drodown-show"><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-facebook"></i></a></li>
                                 <li class="drodown-show"><a href="https://www.instagram.com/pardaltec.2020" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
 
-                                <li class="drodown-show"><a href="#">Minha Conta <i class="ion-ios-arrow-down"></i></a>
+                                @if(\Illuminate\Support\Facades\Session::get('login_status') > 0)
+                                <li class="drodown-show"><a href="#">Olá {{ \Illuminate\Support\Facades\Session::get('cliente')->NmContato }} <i class="ion-ios-arrow-down"></i></a>
                                     <ul class="open-dropdown" style="min-width: 200px;">
-                                        @if(\Illuminate\Support\Facades\Session::get('login_status') > 0)
+
                                             <li><a href="{{ route('front.cliente_area') }}"> Minha Conta </a></li>
                                             <li><a href="{{ route('front.cliente_area') }}"> Meus Pedidos </a></li>
                                             <li><a href="{{ route('front.logout') }}" >Sair</a></li>
-                                        @else
-                                            <li><a href="{{ route('front.login') }}"> Novo Registro </a></li>
-                                            <li><a href="{{ route('front.login') }}"> Entrar</a></li>
 
-                                        @endif
                                     </ul>
                                 </li>
+                                @else
+                                    <li class="drodown-show"><a href="#">Acessar Conta <i class="ion-ios-arrow-down"></i></a>
+                                        <ul class="open-dropdown" style="min-width: 200px;">
+                                            <li><a href="{{ route('front.login') }}"> Novo Registro </a></li>
+                                            <li><a href="{{ route('front.login') }}"> Entrar</a></li>
+                                        </ul>
+                                    </li>
+                                @endif
 
                             </ul>
                         </div>

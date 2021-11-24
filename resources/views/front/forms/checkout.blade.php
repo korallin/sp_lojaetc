@@ -266,7 +266,7 @@
 
                                                     <label class="form-check-label" for="pagamento{{$item->CdPagamento}}">
                                                         <h4 class="mb-0 mt-2 text-primary font-weight-bold">{{$item->NmPagamento}}</h4>
-                                                        <p class="mb-0 small text-muted pr-5">{{ nl2br($item->TxPagamento) }}</p>
+                                                        <p class="mb-0 small text-muted pr-5">@php echo nl2br($item->TxPagamento); @endphp</p>
 
                                                         @foreach(\Illuminate\Support\Facades\Session::get('carrinho_entrega') as $frete)
                                                             <p id="" class="some blo-{{$frete['carrier']}}" style="display: none; max-width: 400px;">Em até {{ $item->NuParcelaMaximo }} X

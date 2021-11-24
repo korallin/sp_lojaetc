@@ -31,7 +31,7 @@ class Controller extends BaseController
             join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
             left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
             where PR.DtDesativacao is null
-
+            and PR.StLojaVirtual = 1
             group by CdGrupo
             order by NmGrupo;
 

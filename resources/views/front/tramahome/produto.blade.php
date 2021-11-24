@@ -67,7 +67,7 @@
                             <!-- Start Small images -->
                             <ul class="product_small_images-bottom horizantal-product-active nav" role="tablist">
                                 @foreach($produto_fotos as $foto)
-                                    <li role="presentation" class="pot-small-img" style="width: 80px !important; height: 80px !important;">
+                                    <li role="" class="pot-small-img" style="width: 80px !important; height: 80px !important;">
                                         <a href="#img-tab-{{$foto->CdFoto}}" role="tab" data-toggle="tab">
                                             <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" style="width: 80px !important; height: 80px !important;"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                         </a>

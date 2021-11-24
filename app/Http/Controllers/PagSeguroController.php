@@ -94,7 +94,7 @@ class PagSeguroController extends Controller
     {
 
         $url  = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/".$request->id."?email=".Session::get('loja_pagseguro_email')."&token=".Session::get('loja_pagseguro_token');
-        $url  = "https://ws.sandbox.pagseguro.uol.com.br/v3/transactions/".$request->id."?email=".Session::get('loja_pagseguro_email')."&token=".Session::get('loja_pagseguro_token');
+        //$url  = "https://ws.sandbox.pagseguro.uol.com.br/v3/transactions/".$request->id."?email=".Session::get('loja_pagseguro_email')."&token=".Session::get('loja_pagseguro_token');
         //dump($url);
         //Inicia o curl
 

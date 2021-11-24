@@ -81,7 +81,7 @@ if (strpos(request()->getHttpHost(),"tramahome") !== false) {
     Session::put('loja_tabelas', '1,2');
     Session::put('loja_imagens', 'https://d.spcommerce.com.br/tramahome/produto/');
     Session::put('loja_banners', 'https://d.spcommerce.com.br/tramahome/publicidade/');
-    Session::put('loja_pagseguro_token', '3a06f3cb-998b-41f1-b26a-0c895e33b6105abe2e604e408024c3d5f63be82878973922-01bc-44ac-b78e-14bd092fffb5');
+    Session::put('loja_pagseguro_token', 'a9c5e7b8-6747-4a20-81ee-db9e4be01d50e06c01214b21b970e28fce41f5ad2f3b8b6c-a0f3-48eb-bbdc-2047437f2c41');
     Session::put('loja_pagseguro_email', 'contatotramahome@gmail.com');
     Session::put('loja_pagseguro_ambiente', 'production');
 }

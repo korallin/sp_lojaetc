@@ -122,6 +122,7 @@ Route::post('/cliente-cadastro-edita-grava', [\App\Http\Controllers\Front\Client
 # retorno cielo
 Route::any('/retorno-cielo', [\App\Http\Controllers\CieloCheckout::class, 'retorno'])->name('retorno.cielo');
 Route::any('/retorno-pagseguro', [\App\Http\Controllers\PagSeguroController::class, 'retorno'])->name('retorno.pagseguro');
+Route::any('/retorno-pagseguro-auto', [\App\Http\Controllers\PagSeguroController::class, 'verificaNotificacao'])->name('retorno.pagseguro_auto');
 
 # cep
 Route::post('/cep', [\App\Http\Controllers\Auxiliar::class, 'cep_f'])->name('front.cep');

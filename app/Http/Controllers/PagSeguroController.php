@@ -124,7 +124,7 @@ class PagSeguroController extends Controller
             //dd($resposta);
 
             if(count($resposta->error) > 0){
-                return redirect()->route('front.checkout')->with('erro_pagamento', 'Pagamento recusado, tente novamente!');
+                return redirect()->route('front.recibo', ['dados' => $request->all()]);
                 exit;
             }
 
@@ -171,6 +171,17 @@ class PagSeguroController extends Controller
             return redirect()->route('front.recibo', ['dados' => $request->all()]);
         }
         //dd($request);
+        */
+    }
+
+    static public function atualizaPagamento($response){
+
+        $dados = json_encode($response, true);
+        file_put_contents(storage_path('app/public/pagseguro_retorno/'.'_'.date('U').'.json'), $dados);
+        /*
+        if(isset($request->retorno_recibo)){
+            return redirect()->route('front.recibo', ['dados' => $request->all()]);
+        }
         */
     }
 

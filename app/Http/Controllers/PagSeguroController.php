@@ -104,7 +104,7 @@ class PagSeguroController extends Controller
         $resposta = curl_exec($curl);
         $http     = curl_getinfo($curl);
 
-        //dd($resposta,$http);
+        dd($resposta,$http);
 
         if($resposta == 'Unauthorized'){
 
@@ -122,7 +122,7 @@ class PagSeguroController extends Controller
             //dd($resposta);
             //Verifica se existem erros
 
-            dd($resposta);
+            //dd($resposta);
 
             if(count($resposta->error) > 0){
                 return redirect()->route('front.checkout')->with('erro_pagamento', 'Pagamento recusado, tente novamente!');

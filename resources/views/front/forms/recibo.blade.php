@@ -34,7 +34,7 @@
                     <p>Agradecemos seu pedido, assim que o pagamento for confirmado vamos iniciar a separação dos itens.</p>
                     <p>Seu pedido em nossa loja é <b>{{ $dados['espelho']['venda']->CdVenda }}</b></p>
 
-                    @if($dados['retrono_id'] == 'deposito')
+                    @if($dados['retorno_id'] == 'deposito')
                         <p>Os dados para deposito e/ou transferência são:</p>
                         <p>{{ $dados['venda_pagamento'][0]->TxPagamento }}</p>
                     @else

@@ -150,7 +150,7 @@
                                 <li class="drodown-show"><a href="https://www.instagram.com/pardaltec.2020" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
 
                                 @if(\Illuminate\Support\Facades\Session::get('login_status') > 0)
-                                <li class="drodown-show"><a href="#">Olá {{ \Illuminate\Support\Facades\Session::get('cliente')->NmContato }} <i class="ion-ios-arrow-down"></i></a>
+                                <li class="drodown-show"><a href="#">Olá {{ \Illuminate\Support\Facades\Session::get('cliente')[0]->NmContato }} <i class="ion-ios-arrow-down"></i></a>
                                     <ul class="open-dropdown" style="min-width: 200px;">
 
                                             <li><a href="{{ route('front.cliente_area') }}"> Minha Conta </a></li>

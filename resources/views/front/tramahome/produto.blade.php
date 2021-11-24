@@ -172,7 +172,7 @@
                                 <!-- product-quantity-action end -->
                                 <!-- pro_dtl_btn start -->
                                 <ul class="pro_dtl_btn">
-                                    <li><button type="button"  class="btn buy_now_btn" style="width: 300px;">ADICIONAR AO CARRINHO</button></li>
+                                    <li><button type="submit"  class="btn buy_now_btn" style="width: 300px;">ADICIONAR AO CARRINHO</button></li>
                                 </ul>
 
                             </form>

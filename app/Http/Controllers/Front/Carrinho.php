@@ -173,6 +173,7 @@ class Carrinho extends Controller
         $dados['venda'] = $nu_venda;
         $dados['venda_produtos'] = Session::get('carrinho');
         $dados['venda_pagamento'] = $venda_pagamento;
+        $dados['venda_modalidade'] = $pagamento_modalidade;
         $dados['frete']['nome'] = $request->frete;
         $dados['frete']['valor'] = Session::get('carrinho_entrega')[$request->frete]['price'];
         $dados['frete']['prazo'] = Session::get('carrinho_entrega')[$request->frete]['deliveryTime'];
@@ -204,7 +205,7 @@ class Carrinho extends Controller
         $cart = \App\Models\ProdutoTemp::where(array('NuSessao' => $_SESSION['lojaetc_id']))->delete();
         $dados['retorno_id'] = 'Em processamento';//$request->retorno_recibo;
         $dados['espelho'] = Session::get('espelho');
-        dd($dados);
+        //dd($dados);
         return view('front.forms.recibo', ['dados' => $dados]);
     }
 

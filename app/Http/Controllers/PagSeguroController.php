@@ -109,12 +109,11 @@ class PagSeguroController extends Controller
         if($resposta == 'Unauthorized'){
 
 
-            $atzvenda = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'),'NuCaixa' => Session::get('loja_caixa')])->whereRaw('TxTransacao like "%'.$request->id.'"')->first();
-            $atzvenda->CdSituacao = 1;
-            $atzvenda->save();
+
+            return redirect()->route('front.recibo', ['dados' => $request->all()]);
 
 
-            return redirect()->route('front.checkout')->with('erro_pagamento','Pagamento recusado, tente novamente!');
+            //return redirect()->route('front.checkout')->with('erro_pagamento','Pagamento recusado, tente novamente!');
             exit;
         }else{
             //Interpreta uma string XML e a transforma em um objeto

@@ -121,12 +121,15 @@ class PagSeguroController extends Controller
             $resposta= simplexml_load_string($resposta);
             //dd($resposta);
             //Verifica se existem erros
+
+            dd($resposta);
+
             if(count($resposta->error) > 0){
                 return redirect()->route('front.checkout')->with('erro_pagamento', 'Pagamento recusado, tente novamente!');
                 exit;
             }
 
-            dd($resposta);
+
 
             //Verifica se a transação foi paga
             if($resposta->status == 3){

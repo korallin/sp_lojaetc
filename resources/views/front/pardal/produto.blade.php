@@ -38,7 +38,7 @@
                                 <div class="portfolio-full-image tab-content">
 
                                     <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-0">
-                                        <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}" class="">
+
                                             @if($item->NmFoto == '')
                                                 <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                             @else
@@ -47,7 +47,7 @@
                                                         autoInside: 550
                                                     '>
                                             @endif
-                                        </a>
+
                                     </div>
                                     @foreach($produto_fotos as $foto)
                                         <div role="tabpanel" class="tab-pane product-image-position" id="img-tab-{{$foto->CdFoto}}">

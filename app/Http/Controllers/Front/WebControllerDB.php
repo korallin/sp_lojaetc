@@ -247,7 +247,8 @@ class WebControllerDB extends Controller
         $produto_detalhe = DB::connection('mysql_loja')->select('
             select 	PD.*, PE.QtEstoque, PC.CdReferencia,
                         (select max(VlPreco) from produto_preco where CdTabela in(?) and CdProduto = PD.CdProduto and CdDetalhe = PD.CdDetalhe ) as VlVenda,
-                        (select min(VlPreco) from produto_preco where CdTabela in(?) and CdProduto = PD.CdProduto and CdDetalhe = PD.CdDetalhe ) as VlPromocional
+                        (select min(VlPreco) from produto_preco where CdTabela in(?) and CdProduto = PD.CdProduto and CdDetalhe = PD.CdDetalhe ) as VlPromocional,
+                        PE.QtEstoque as estoque
             from produto_detalhe PD
             join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
             left join produto_estoque PE on (PE.CdEstabel = ? and PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe)

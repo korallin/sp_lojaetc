@@ -25,10 +25,10 @@
     <div class="main-content-wrap section-ptb lagin-and-register-page">
         <div class="container">
             <div class="row cnt_box align-items-center">
-                <div class="col-md-3 d-none d-sm-block">
+                <div class="col-md-2 d-none d-sm-block">
 
                 </div>
-                <div class="col-md-5 col-sm-6 mt-sm-5 mb-sm-5">
+                <div class="col-md-6 col-sm-6 mt-sm-5 mb-sm-5">
                     <h3>Pedido Colocado!</h3>
 
                     <p>Agradecemos seu pedido, assim que o pagamento for confirmado vamos iniciar a separação dos itens.</p>

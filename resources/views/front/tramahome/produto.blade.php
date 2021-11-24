@@ -120,12 +120,14 @@
                                     <div class="pro_dtl_size">
                                         <h2 class="title_2">Escolha a variação</h2>
                                         @foreach($produto_detalhe as $pd)
+                                            @if($pd->estoque > 0)
                                             <div class="form-check" style="padding-left: 25px;">
                                                 <input class="form-check-input" type="radio" name="detalhe" id="detalhe_{{$pd->CdDetalhe}}" value="{{$pd->CdDetalhe}}" required>
                                                 <label class="form-check-label" style="padding-left: 0.25rem;" for="detalhe_{{$pd->CdDetalhe}}">
                                                     {{$pd->NmDetalhe}} - <span class="new-price text-success font-weight-bolder">R$ {{ number_format($pd->VlPromocional, 2, ',', '.') }}</span>
                                                 </label>
                                             </div>
+                                            @endif
 
                                         @endforeach
 

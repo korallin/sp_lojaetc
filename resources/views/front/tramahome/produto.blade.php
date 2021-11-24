@@ -65,10 +65,10 @@
                             </div>
 
                             <!-- Start Small images -->
-                            <ul class="product_small_images-bottom" role="">
+                            <ul class="product_small_images-bottom" role="tablist">
                                 @foreach($produto_fotos as $foto)
-                                    <li role="" class="" style="width: 80px !important; height: 80px !important; float: left; margin-right: 5px;">
-                                        <a href="#img-tab-{{$foto->CdFoto}}" role="tab" data-toggle="tab">
+                                    <li role="presentation" class="" style="width: 80px !important; height: 80px !important; float: left; margin-right: 5px;">
+                                        <a href="#img-tab-{{$foto->CdFoto}}" class="mini" role="tab" data-toggle="tab">
                                             <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" style="width: 80px !important; height: 80px !important;"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                         </a>
                                     </li>
@@ -304,6 +304,14 @@
                 $('#info').text("Page width: "+$(this).width());
             });
             $(window).trigger('resize');
+        });
+
+        $('.mini').click(function (e){
+           var id = $(this).attr('href');
+           $('.tab-pane').each( function(i,el) {
+               $(this).removeClass('active');
+            });
+           $(id).addClass('active');
         });
 
 

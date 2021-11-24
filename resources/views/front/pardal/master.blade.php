@@ -33,7 +33,7 @@
             position:fixed;
             width:60px;
             height:60px;
-            bottom:40px;
+            bottom:120px;
             right:40px;
             background-color:#25d366;
             color:#FFF;

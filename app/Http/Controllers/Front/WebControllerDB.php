@@ -239,7 +239,7 @@ class WebControllerDB extends Controller
 
         ', [$id]);
 
-        dd($produtos_fotos);
+        //dd($produtos_fotos);
 
 
 

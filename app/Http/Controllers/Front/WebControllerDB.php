@@ -68,24 +68,8 @@ class WebControllerDB extends Controller
     public function departamento(Request $request, $id,$nome)
     {
 
-        /*
-        $departamento = DB::connection('mysql_loja')->select('
 
-            select 	GX.CdDepartamento, GR.CdDepartamento, GR.CdDepartamentoPai, GR.NmDepartamento as nome_departamento, SG.NmDepartamento,
-			if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, GR.CdDepartamento ) as CdGrupo,
-			if(GR.CdDepartamentoPai is not null, SG.NmDepartamento, GR.NmDepartamento ) as NmGrupo
-            from produto PR
-            join produto_estoque PE on (PE.CdProduto = PR.CdProduto and PE.CdEstabel = ? and PE.QtEstoque > 0 )
-            join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
-            join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
-            left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
-            where PR.DtDesativacao is null
-            and if(GR.CdDepartamentoPai is not null, GR.CdDepartamentoPai, SG.CdDepartamento ) = ?
-            group by CdGrupo
-            order by NmGrupo;
 
-        ', [Session::get('loja_estabelecimento'), $id]);
-        */
 
         $departamento = DB::connection('mysql_loja')->select('
 
@@ -113,7 +97,10 @@ class WebControllerDB extends Controller
         where PR.DtDesativacao is null
             and PR.StLojaVirtual = 1
             and PP.CdTabela in (?)
-            and GX.CdDepartamento = ?
+            and PR.CdProduto in (select PX.CdProduto from produto_x_departamento PX
+							join produto_departamento PD on (PD.CdDepartamento = PX.CdDepartamento)
+							where (	PD.CdDepartamento = ?	or	PD.CdDepartamentoPai = ?)
+							group by PX.CdProduto)
 
         group by PR.CdProduto
         order by
@@ -130,7 +117,7 @@ class WebControllerDB extends Controller
                 ) : "StFoto desc, PR.DtAtualizacao desc, rand()").'
 
 
-        ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'),$id]);
+        ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'),$id,$id]);
 
         //dd(Session::get('loja'),$produtos);
 

@@ -47,6 +47,11 @@
         .my-floatzap{
             margin-top:16px;
         }
+
+        .header-top a:hover{
+            color:#c9c9c9 !important;
+        }
+
     </style>
 
 
@@ -125,7 +130,10 @@
                 <div class="row">
 
                     <div class="col-md-4 col-sm-6">
-                        <p> <a href="#"> <i class="fab fa-whatsapp"></i> + 55 24 2248-3799</a> </p>
+                        <p>
+                            <a href="https://api.whatsapp.com/send?phone=+5524988018819&text=Olá gostaria de um contato." class="mr-3"> <i class="fab fa-whatsapp"></i> (24) 98801-8819</a>
+                            <a href="tel:2422483799"> <i class="fas fa-phone"></i> (24) 2248-3799</a>
+                        </p>
                     </div>
                     <div class="col-md-8 col-sm-6">
                         <!-- language-currency-wrapper start -->
@@ -139,7 +147,7 @@
                                 <li class="drodown-show"><a href="https://twitter.com/Pardaltec" target="_blank"><i class="ion-social-twitter"></i></a></li>
                                 <li class="drodown-show"><a href="https://www.youtube.com/channel/UCEOsKJlaL6Ir1i9oeE0WNDw" target="_blank"><i class="ion-social-youtube"></i></a></li>
                                 <li class="drodown-show"><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-facebook"></i></a></li>
-                                <li class="drodown-show"><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
+                                <li class="drodown-show"><a href="https://www.instagram.com/pardaltec.2020" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
 
                                 <li class="drodown-show"><a href="#">Minha Conta <i class="ion-ios-arrow-down"></i></a>
                                     <ul class="open-dropdown" style="min-width: 200px;">
@@ -354,7 +362,7 @@
                         <div class="footer-info mt-3">
                             <ul class="footer-info-list">
                                 <li>
-                                    <i class="ion-ios-location-outline"></i> Endereco : Rua do Imperador, 12345
+                                    <i class="ion-ios-location-outline"></i> Endereco : Travessa Goitacazes, 107
                                 </li>
                                 <li>
                                     <i class="ion-ios-email-outline"></i> E-mail : <a href="mailto:contato@pardal.com.br">contato@pardal.com.br</a>
@@ -363,7 +371,7 @@
                                     <i class="ion-ios-telephone-outline"></i> Telefone: + 55 24 2248-3799
                                 </li>
                                 <li>
-                                    <i class="ion-ios-id-card-outline"></i> CNPJ: 00.000.000/0000-00
+                                    <i class="ion-ios-id-card-outline"></i> CNPJ: 01.174.561/0001-70
                                 </li>
                             </ul>
                             <div class="payment-cart">
@@ -429,7 +437,7 @@
                                 <li><a href="https://twitter.com/Pardaltec" target="_blank"><i class="ion-social-twitter"></i></a></li>
                                 <li><a href="https://www.youtube.com/channel/UCEOsKJlaL6Ir1i9oeE0WNDw" target="_blank"><i class="ion-social-youtube"></i></a></li>
                                 <li><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-facebook"></i></a></li>
-                                <li><a href="https://www.facebook.com/pardaldesidratadores/" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
+                                <li><a href="https://www.facebook.com/pardaltec.2020/" target="_blank"><i class="ion-social-instagram-outline"></i></a></li>
                             </ul>
                         </div>
                     </div>

@@ -94,6 +94,7 @@ class Carrinho extends Controller
         }
 
         $entrega_banco = DB::connection('mysql_loja')->select('select * from entrega where NmCarier = "'.Session::get('carrinho_entrega')[$request->frete]['carrier_description'].'"');
+        //dd($entrega_banco);
         Session::put('entrega_banco', $entrega_banco);
 
         $transacao = json_encode(Session::all(), true);
@@ -186,6 +187,10 @@ class Carrinho extends Controller
         if($pagamento_modalidade->CdPagamento == '11'){
             $pagseguro = \App\Http\Controllers\PagSeguroController::criaRequisicao($dados);
             return redirect($pagseguro);
+        }
+
+        if($pagamento_modalidade->CdPagamento == '8'){
+            return redirect()->route('front.recibo', ['dados' => $dados]);
         }
 
         dd($request->all(),$pagamento_modalidade,$venda,$venda_produto,$request,$cliente,$cliente_endereco);

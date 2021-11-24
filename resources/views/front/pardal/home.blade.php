@@ -147,7 +147,7 @@
                 <div class="col-lg-6 offset-lg-1">
                     <div class="instagram-wrapper">
                         <div class="instaram-title text-center">
-                            <h3>Siganos no Instagram <a href="#">@pardaltec</a></h3>
+                            <h3>Siganos no Instagram <a href="#">@pardaltec.2020</a></h3>
                         </div>
                         <div class="instagram-warp instagram-slider row">
                             <div class="col-lg-6">

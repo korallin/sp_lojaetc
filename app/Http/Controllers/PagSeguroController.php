@@ -125,6 +125,9 @@ class PagSeguroController extends Controller
                 return redirect()->route('front.checkout')->with('erro_pagamento', 'Pagamento recusado, tente novamente!');
                 exit;
             }
+
+            dd($resposta);
+
             //Verifica se a transação foi paga
             if($resposta->status == 3){
 

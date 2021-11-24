@@ -104,72 +104,117 @@
                         </div>
                         <!-- pro_details end -->
 
-                        <form action="{{ route('front.carrinho_add') }}" method="post">
+                        @if($item->estoque > 0)
 
-                            @csrf
-                            @method('post')
+                            <form action="{{ route('front.carrinho_add') }}" method="post">
 
-                            <input type="hidden" name="produto" value="{{$item->CdProduto}}">
+                                @csrf
+                                @method('post')
 
-                            @if(count($produto_detalhe) > 1)
-
-                                <div class="pro_dtl_size">
-                                    <h2 class="title_2">Escolha a variação</h2>
-                                    @foreach($produto_detalhe as $pd)
-                                        <div class="form-check" style="padding-left: 25px;">
-                                            <input class="form-check-input" type="radio" name="detalhe" id="detalhe_{{$pd->CdDetalhe}}" value="{{$pd->CdDetalhe}}" required>
-                                            <label class="form-check-label" style="padding-left: 0.25rem;" for="detalhe_{{$pd->CdDetalhe}}">
-                                                {{$pd->NmDetalhe}} - <span class="new-price text-success font-weight-bolder">R$ {{ number_format($pd->VlPromocional, 2, ',', '.') }}</span>
-                                            </label>
-                                        </div>
-
-                                    @endforeach
-
-                                </div>
-
-                            @else
-
-                                <ul class="pro_dtl_prize">
-
-                                    @if($item->VlPrecoMax > $item->VlPrecoMin)
-                                        <li class="old_prize">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
-                                        <li class="new-price">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</li>
-                                    @else
-                                        <li class="new-price">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
-                                    @endif
-
-                                </ul>
-
-                                <input type="hidden" name="detalhe" value="{{$produto_detalhe[0]->CdDetalhe}}">
-
-                        @endif
-
-                        <!-- pro_dtl_prize start -->
-
-                            <!-- pro_dtl_prize end -->
+                                <input type="hidden" name="produto" value="{{$item->CdProduto}}">
 
 
-                            <!-- pro_dtl_size end -->
-                            <!-- product-quantity-action start -->
-                            <div class="product-quantity-action">
-                                <div class="prodict-statas"><span>Quantidade :</span></div>
-                                <div class="product-quantity">
 
-                                    <div class="product-quantity">
-                                        <div class="cart-plus-minus">
-                                            <input value="1" type="number" name="quantidade" min="1" max="99">
-                                        </div>
+                                @if(count($produto_detalhe) > 1)
+
+                                    <div class="pro_dtl_size">
+                                        <h2 class="title_2">Escolha a variação</h2>
+                                        @foreach($produto_detalhe as $pd)
+                                            <div class="form-check" style="padding-left: 25px;">
+                                                <input class="form-check-input" type="radio" name="detalhe" id="detalhe_{{$pd->CdDetalhe}}" value="{{$pd->CdDetalhe}}" required>
+                                                <label class="form-check-label" style="padding-left: 0.25rem;" for="detalhe_{{$pd->CdDetalhe}}">
+                                                    {{$pd->NmDetalhe}} - <span class="new-price text-success font-weight-bolder">R$ {{ number_format($pd->VlPromocional, 2, ',', '.') }}</span>
+                                                </label>
+                                            </div>
+
+                                        @endforeach
+
                                     </div>
 
+                                @else
+
+                                    <ul class="pro_dtl_prize">
+
+                                        @if($item->VlPrecoMax > $item->VlPrecoMin)
+                                            <li class="old_prize">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
+                                            <li class="new-price">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</li>
+                                        @else
+                                            <li class="new-price">R$ {{ number_format($item->VlPrecoMax, 2, ',', '.') }}</li>
+                                        @endif
+
+                                    </ul>
+
+                                    <input type="hidden" name="detalhe" value="{{$produto_detalhe[0]->CdDetalhe}}">
+
+                            @endif
+
+                            <!-- pro_dtl_prize start -->
+
+                                <!-- pro_dtl_prize end -->
+
+
+                                <!-- pro_dtl_size end -->
+                                <!-- product-quantity-action start -->
+                                <div class="product-quantity-action">
+                                    <div class="prodict-statas"><span>Quantidade :</span></div>
+                                    <div class="product-quantity">
+
+                                        <div class="product-quantity">
+                                            <div class="cart-plus-minus">
+                                                <input value="1" type="number" name="quantidade" min="1" max="99">
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- product-quantity-action end -->
-                            <!-- pro_dtl_btn start -->
+                                <!-- product-quantity-action end -->
+                                <!-- pro_dtl_btn start -->
+                                <ul class="pro_dtl_btn">
+                                    <li><button type="button"  class="btn buy_now_btn" style="width: 300px;">ADICIONAR AO CARRINHO</button></li>
+                                </ul>
+
+                            </form>
+
+                        @else
+
                             <ul class="pro_dtl_btn">
-                                <li><button type="submit" class="btn buy_now_btn" style="width: 300px;">ADICIONAR AO CARRINHO</button></li>
+                                <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">AVISE-ME</button></li>
                             </ul>
 
-                        </form>
+                            <div class="modal fade" id="aviseme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 400px;">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-light">
+                                            <h5 class="modal-title font-weight-bold" id="exampleModalLabel">AVISE-ME QUANDO CHEGAR</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <form action="{{ route('front.login_senha') }}" method="post">
+                                            <div class="modal-body">
+                                                <p>Informe os dados abaixo para que possamos lhe enviar um e-mail avisando.</p>
+
+                                                @csrf
+                                                @method('post')
+                                                <div class="login-input-box">
+                                                    <input type="text" required name="nome" placeholder="Seu Nome">
+                                                    <input type="email" required name="email" placeholder="Seu e-mail">
+                                                </div>
+
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="button-box">
+                                                    <button class="login-btn btn" type="submit"><span>Enviar</span></button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        @endif
 
                         <div class="pro_social_share mx-auto">
                             <h2 class="title_2">COMPARTILHAR:</h2>

@@ -210,7 +210,8 @@ class WebControllerDB extends Controller
         select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
-			if(PF.NmFoto is null, 0,1) as StFoto, GX.CdDepartamento as CdDepartamento
+			if(PF.NmFoto is null, 0,1) as StFoto, GX.CdDepartamento as CdDepartamento,
+               max(PE.QtEstoque) as estoque
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
         left join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
@@ -266,6 +267,7 @@ class WebControllerDB extends Controller
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
 			if(PF.NmFoto is null, 0,1) as StFoto
+
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
         join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )

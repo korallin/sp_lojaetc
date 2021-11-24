@@ -190,6 +190,7 @@ class Carrinho extends Controller
         }
 
         if($pagamento_modalidade->CdModalidade == '8'){
+            $dados['retorno_id'] = 'deposito';
             return redirect()->route('front.recibo', ['dados' => $dados]);
         }
 

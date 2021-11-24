@@ -104,7 +104,7 @@ class PagSeguroController extends Controller
         $resposta = curl_exec($curl);
         $http     = curl_getinfo($curl);
 
-        dd($resposta,$http);
+        //dd($resposta,$http);
 
         if($resposta == 'Unauthorized'){
 

@@ -234,10 +234,16 @@ class WebControllerDB extends Controller
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'),$id]);
 
         $produtos_fotos = DB::connection('mysql_loja')->select('
+
             select * from produto_foto
             where CdProduto = ?
-            order by StPrincipal desc
-
+            and CdFoto in (	select FO.CdFoto
+                from produto_detalhe PD
+                join produto_foto FO on (PD.CdProduto = FO.CdProduto)
+                where PD.StDetalhe = 1
+                and PD.CdProduto = produto_foto.CdProduto
+                and (FO.NuDetalhe like concat("%,PD.CdDetalhe,%")	or	FO.NuDetalhe is null)
+                )
         ', [$id]);
 
         //dd($produtos_fotos);

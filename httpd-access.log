@@ -11837,3 +11837,13 @@
 179.66.242.168 - - [24/Nov/2021:15:28:19 -0300] "GET /assets/tramahome/style.css.map HTTP/1.1" 404 6609
 179.66.242.168 - - [24/Nov/2021:15:28:19 -0300] "GET /assets/css/bootstrap.min.css.map HTTP/1.1" 404 6609
 179.66.242.168 - - [24/Nov/2021:15:28:19 -0300] "GET /assets/js/bootstrap.min.js.map HTTP/1.1" 404 6609
+179.66.242.168 - - [25/Nov/2021:16:42:16 -0300] "GET / HTTP/1.1" 500 589097
+179.66.242.168 - - [25/Nov/2021:16:42:44 -0300] "GET / HTTP/1.1" 200 88383
+179.66.242.168 - - [25/Nov/2021:16:42:45 -0300] "GET /assets/pardal/custom.css HTTP/1.1" 304 -
+179.66.242.168 - - [25/Nov/2021:16:42:45 -0300] "GET /assets/pardal/style.css HTTP/1.1" 304 -
+179.66.242.168 - - [25/Nov/2021:16:42:49 -0300] "GET /45/motor-125-f HTTP/1.1" 500 631398
+179.66.242.168 - - [25/Nov/2021:16:43:33 -0300] "GET /45/motor-125-f HTTP/1.1" 200 68296
+179.66.242.168 - - [25/Nov/2021:16:43:34 -0300] "GET /assets/css/cloudzoom.css HTTP/1.1" 200 1034
+179.66.242.168 - - [25/Nov/2021:16:43:34 -0300] "GET /assets/css/thumbelina.css HTTP/1.1" 200 2899
+179.66.242.168 - - [25/Nov/2021:16:43:34 -0300] "GET /assets/js/thumbelina.js HTTP/1.1" 200 4921
+179.66.242.168 - - [25/Nov/2021:16:43:34 -0300] "GET /assets/js/cloudzoom.js HTTP/1.1" 200 23568

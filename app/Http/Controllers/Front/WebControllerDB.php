@@ -242,8 +242,9 @@ class WebControllerDB extends Controller
                 join produto_foto FO on (PD.CdProduto = FO.CdProduto)
                 where PD.StDetalhe = 1
                 and PD.CdProduto = produto_foto.CdProduto
-                and (FO.NuDetalhe like concat("%,PD.CdDetalhe,%")	or	FO.NuDetalhe is null)
-                )
+                and (	FO.NuDetalhe like concat('%',PD.CdDetalhe,'%')	or	FO.NuDetalhe is null 			)
+            )
+            order by StPrincipal desc;
         ', [$id]);
 
         dd($produtos_fotos);

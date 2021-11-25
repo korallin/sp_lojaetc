@@ -247,7 +247,7 @@ class WebControllerDB extends Controller
             order by StPrincipal desc;
         ', [$id]);
 
-        dd($produtos_fotos);
+        //dd($produtos_fotos);
 
 
 

@@ -247,9 +247,6 @@ class WebControllerDB extends Controller
             order by StPrincipal desc;
         ', [$id]);
 
-        //dd($produtos_fotos);
-
-
 
         $produto_detalhe = DB::connection('mysql_loja')->select('
             select 	PD.*, PE.QtEstoque, PC.CdReferencia,

@@ -19,12 +19,15 @@ class FreteNet extends Controller
             ->setShipmentInvoiceValue(Session::get('carrinho_total'));
 
         foreach (Session::get('carrinho') as $item){
+            //dump($item);
             if(!isset($item->PsProduto) || $item->PsProduto == '' || $item->PsProduto < 0.300) $item->PsProduto = 0.300;
-            if(!isset($item->largura) || $item->largura == '') $item->largura = 20;
-            if(!isset($item->altura) || $item->altura == '') $item->altura = 20;
-            if(!isset($item->profundidade) || $item->profundidade == '') $item->profundidade = 20;
-            $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $item->PsProduto, $item->largura, $item->altura, $item->profundidade, 'Accessories');
+            if(!isset($item->NuLargura) || $item->NuLargura == ''){ $item->NuLargura = 50; } else { $item->NuLargura = ($item->NuLargura*100); }
+            if(!isset($item->NuAltura) || $item->NuAltura == ''){ $item->NuAltura = 50; } else { $item->NuAltura = ($item->NuAltura*100); }
+            if(!isset($item->NuComprimento) || $item->NuComprimento == ''){ $item->NuComprimento = 50; } else { $item->NuComprimento = ($item->NuComprimento*100); }
+            $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $item->PsProduto, $item->NuLargura, $item->NuAltura, $item->NuComprimento, 'Accessories');
         }
+
+        //dd($quote_itens);
 
 
         $result = $quote_itens->execute();

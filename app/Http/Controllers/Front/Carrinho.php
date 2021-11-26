@@ -31,10 +31,10 @@ class Carrinho extends Controller
 
         foreach (Session::get('carrinho') as $item){
             if(!isset($item->PsProduto) || $item->PsProduto == '' || $item->PsProduto < 0.300) $item->PsProduto = 0.300;
-            if(!isset($item->largura) || $item->largura == '') $item->largura = 20;
-            if(!isset($item->altura) || $item->altura == '') $item->altura = 20;
-            if(!isset($item->profundidade) || $item->profundidade == '') $item->profundidade = 20;
-            $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $item->PsProduto, $item->largura, $item->altura, $item->profundidade, 'Accessories');
+            if(!isset($item->NuLargura) || $item->NuLargura == ''){ $item->NuLargura = 50; } else { $item->NuLargura = ($item->NuLargura*100); }
+            if(!isset($item->NuAltura) || $item->NuAltura == ''){ $item->NuAltura = 50; } else { $item->NuAltura = ($item->NuAltura*100); }
+            if(!isset($item->NuComprimento) || $item->NuComprimento == ''){ $item->NuComprimento = 50; } else { $item->NuComprimento = ($item->NuComprimento*100); }
+            $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $item->PsProduto, $item->NuLargura, $item->NuAltura, $item->NuComprimento, 'Accessories');
         }
         $result = $quote_itens->execute();
         $services = $result->getShippingServices();
@@ -140,8 +140,8 @@ class Carrinho extends Controller
 		$nu_venda = \App\Models\Venda::where(['CdEstabel' => Session::get('loja_estabelecimento'),'NuCaixa' => Session::get('loja_caixa'),'CdCliente' => $cliente->CdCliente,'DtVenda' => $data_venda])->first();
 
 		$venda_produto = DB::connection('mysql_loja')->insert('
-		insert into venda_produto (CdEstabel, NuCaixa, CdTipo, CdVenda, CdProduto, CdDetalhe, CdReferencia, QtVendida, PsProduto, VlPreco, VlCusto, VlDesconto, CdSitTributariaIcms, CdSitTributariaIpi, CdSitTributariaPis, CdSitTributariaCofins, CdCFOP,  StItem, DtAtualizacao)
-        (select PT.CdEstabel, '.Session::get('loja_caixa').', 1, '.$nu_venda->CdVenda.', PT.CdProduto, PT.CdDetalhe, PT.CdReferencia, PT.QtProduto, PT.PsProduto, PT.VlPreco, PE.VlCusto, PT.VlDesconto,  PR.CdSitTributariaIcms, PR.CdSitTributariaIpi, PR.CdSitTributariaPis, PR.CdSitTributariaCofins, PR.CdCFOP, 1, "'.date('Y-m-d H:i:s').'"
+		insert into venda_produto (CdEstabel, NuCaixa, CdTipo, CdVenda, CdProduto, CdDetalhe, CdReferencia, QtVendida, PsProduto, NuAltura, NuLargura, NuComprimento, VlPreco, VlCusto, VlDesconto, CdSitTributariaIcms, CdSitTributariaIpi, CdSitTributariaPis, CdSitTributariaCofins, CdCFOP,  StItem, DtAtualizacao)
+        (select PT.CdEstabel, '.Session::get('loja_caixa').', 1, '.$nu_venda->CdVenda.', PT.CdProduto, PT.CdDetalhe, PT.CdReferencia, PT.QtProduto, PT.PsProduto, PT.NuAltura, PT.NuLargura, PT.NuComprimento, PT.VlPreco, PE.VlCusto, PT.VlDesconto,  PR.CdSitTributariaIcms, PR.CdSitTributariaIpi, PR.CdSitTributariaPis, PR.CdSitTributariaCofins, PR.CdCFOP, 1, "'.date('Y-m-d H:i:s').'"
         from produto_temp PT
         join produto PR on (PR.CdProduto = PT.CdProduto)
         left join produto_estoque PE on (PE.CdEstabel = PT.CdEstabel and PE.CdProduto = PT.CdProduto and PE.CdDetalhe = PT.CdDetalhe)
@@ -225,7 +225,11 @@ class Carrinho extends Controller
         $prod = DB::connection('mysql_loja')->select('
         select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
-			PF.NmFoto, PD.PsProduto as PsProduto,
+			PF.NmFoto,
+               PD.PsProduto as PsProduto,
+               PD.NuAltura as NuAltura,
+               PD.NuLargura as NuLargura,
+               PD.NuComprimento as NuComprimento,
 			if(PF.NmFoto is null, 0,1) as StFoto, GX.CdDepartamento as CdDepartamento
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
@@ -266,6 +270,9 @@ class Carrinho extends Controller
         $cart->CdReferencia = $prod[0]->CdReferencia;
         $cart->QtProduto = $request->quantidade;
         $cart->PsProduto = $prod[0]->PsProduto;
+        $cart->NuAltura = $prod[0]->NuAltura;
+        $cart->NuLargura = $prod[0]->NuLargura;
+        $cart->NuComprimento = $prod[0]->NuComprimento;
         $cart->VlPreco = $prod[0]->VlPrecoMin;
         $cart->DtAtualizacao = date('Y-m-d H:i:s');
         $cart->save();
@@ -315,7 +322,8 @@ class Carrinho extends Controller
                     if(PF.NmFoto is null, 0,1) as StFoto,
                     UN.NmUnidade, UN.StFracionario, PD.CdDetalhe, PD.NmDetalhe,
                     PT.CdReferencia, PT.QtProduto, PT.VlPreco, PT.VlDesconto, PT.PcDesconto,
-                    (PT.QtProduto * (PT.VlPreco - PT.VlDesconto) ) as VlPrecoTotal
+                    (PT.QtProduto * (PT.VlPreco - PT.VlDesconto) ) as VlPrecoTotal,
+                    PT.NuAltura, PT.NuLargura, PT.NuComprimento
         from produto_temp PT
         join produto_detalhe PD on (PT.CdProduto = PD.CdProduto and PT.CdDetalhe = PD.CdDetalhe)
         join produto PR on (PT.CdProduto = PR.CdProduto)

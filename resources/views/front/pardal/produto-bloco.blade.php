@@ -28,8 +28,12 @@
                                     <div class="product-content">
                                         <h3><a href="{{ route('front.produto', [$item->CdProduto, \Illuminate\Support\Str::slug($item->NmProduto)]) }}" class="small">{{ $item->NmProduto }}</a></h3>
                                         <div class="price-box">
+                                            @if($item->estoque > 0)
                                             <small>A partir de:</small><br>
                                             <span class="new-price text-success">R$ {{ number_format($item->VlPrecoMin, 2, ',', '.') }}</span>
+                                            @else
+                                                <span class="new-price text-info">Sob Consulta</span><br>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

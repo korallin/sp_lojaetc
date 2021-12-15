@@ -98,6 +98,8 @@ Route::get('/pagina/{id}/{nome}', [\App\Http\Controllers\Front\Paginas::class, '
 Route::get('/departamento/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'departamento'])->name('front.departamento');
 Route::get('/busca', [\App\Http\Controllers\Front\WebControllerDB::class, 'busca'])->name('front.busca');
 Route::get('/{id}/{nome}', [\App\Http\Controllers\Front\WebControllerDB::class, 'produto'])->name('front.produto');
+Route::post('/grava-orcamento', [\App\Http\Controllers\Front\WebControllerDB::class, 'grava_orcamento'])->name('front.grava_orcamento');
+Route::post('/grava-aviseme', [\App\Http\Controllers\Front\WebControllerDB::class, 'grava_aviseme'])->name('front.grava_aviseme');
 
 Route::get('/carrinho', [\App\Http\Controllers\Front\Carrinho::class, 'lista_carrinho'])->name('front.carrinho');
 Route::post('/carrinho/add', [\App\Http\Controllers\Front\Carrinho::class, 'add'])->name('front.carrinho_add');

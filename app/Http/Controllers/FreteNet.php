@@ -17,14 +17,22 @@ class FreteNet extends Controller
             ->setSellerPostcode(Session::get('loja_cep'))
             ->setRecipientPostcode(\App\Http\Controllers\Auxiliar::l_int($request->cep))
             ->setShipmentInvoiceValue(Session::get('carrinho_total'));
+        $peso = 0;
+        $larg = 0;
+        $altu = 0;
+        $prof = 0;
 
         foreach (Session::get('carrinho') as $item){
             //dump($item);
             if(!isset($item->PsProduto) || $item->PsProduto == '' || $item->PsProduto < 0.300) $item->PsProduto = 0.300;
-            if(!isset($item->NuLargura) || $item->NuLargura == ''){ $item->NuLargura = 50; } else { $item->NuLargura = ($item->NuLargura*100); }
-            if(!isset($item->NuAltura) || $item->NuAltura == ''){ $item->NuAltura = 50; } else { $item->NuAltura = ($item->NuAltura*100); }
-            if(!isset($item->NuComprimento) || $item->NuComprimento == ''){ $item->NuComprimento = 50; } else { $item->NuComprimento = ($item->NuComprimento*100); }
+            if(!isset($item->NuLargura) || $item->NuLargura == ''){ $item->NuLargura = 30; } else { $item->NuLargura = ($item->NuLargura*100); }
+            if(!isset($item->NuAltura) || $item->NuAltura == ''){ $item->NuAltura = 30; } else { $item->NuAltura = ($item->NuAltura*100); }
+            if(!isset($item->NuComprimento) || $item->NuComprimento == ''){ $item->NuComprimento = 30; } else { $item->NuComprimento = ($item->NuComprimento*100); }
             $quote_itens = $quote->addShippingItem($item->CdProduto.'-'.$item->CdDetalhe, $item->QtProduto, $item->PsProduto, $item->NuLargura, $item->NuAltura, $item->NuComprimento, 'Accessories');
+            $peso += $item->PsProduto;
+            $larg += $item->NuLargura;
+            $altu += $item->NuAltura;
+            $prof += $item->NuComprimento;
         }
 
         //dd($quote_itens);
@@ -51,6 +59,14 @@ class FreteNet extends Controller
             //dump($service->getServiceDescription(),$dados['frete']);
             $cc++;
 
+        }
+
+        if(!$dados['frete']){
+
+            $dados['frete']['PsProduto'] = $peso;
+            $dados['frete']['NuLargura'] = $larg;
+            $dados['frete']['NuAltura'] = $altu;
+            $dados['frete']['NuComprimento'] = $comp;
         }
 
         return json_encode($dados['frete']);

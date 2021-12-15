@@ -1,10 +1,16 @@
 @extends('front.'.\Illuminate\Support\Facades\Session::get('loja').'.master')
 
 @section('css')
-    <!-- cloudzoom Style CSS -->
-    <link rel="stylesheet" href="/assets/css/cloudzoom.css">
+
     <!-- thumbelina Style CSS -->
     <link rel="stylesheet" href="/assets/css/thumbelina.css">
+    <link rel="stylesheet" href="https://unpkg.com/xzoom/dist/xzoom.css">
+
+    <style>
+        .xzoom {
+            -webkit-box-shadow:none !important; box-shadow:none !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -52,12 +58,12 @@
                                         </div>
                                         @foreach($produto_fotos as $foto)
                                             <div role="tabpanel" class="tab-pane product-image-position" id="img-tab-{{$foto->CdFoto}}">
-                                                <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" class="">
+
                                                     <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" alt="{{$item->NmProduto}}" class="" id ="zoom{{$foto->CdFoto}}" data-cloudzoom='
                                                         zoomSizeMode:"image",
                                                         autoInside: 550
                                                     '>
-                                                </a>
+
                                             </div>
                                         @endforeach
 
@@ -179,6 +185,21 @@
 
                         @else
 
+                            @if(session()->has('sucesso'))
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <div>{{ session()->get('sucesso') }}</div>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endif
+
                             <ul class="pro_dtl_btn">
                                 <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">AVISE-ME</button></li>
                             </ul>
@@ -196,6 +217,23 @@
                                         <form action="{{ route('front.login_senha') }}" method="post">
                                             <div class="modal-body">
                                                 <p>Informe os dados abaixo para que possamos lhe enviar um e-mail avisando.</p>
+
+                                                @if($errors->all())
+                                                    <div class="container mb-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                    @foreach($errors->all() as $erro)
+                                                                        <div>{{ $erro }}</div>
+                                                                    @endforeach
+                                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
 
                                                 @csrf
                                                 @method('post')
@@ -331,11 +369,12 @@
     <!-- thumbelina Zoomin JS -->
     <script src="/assets/js/thumbelina.js"></script>
     <!-- cloudzoom Zoomin JS -->
-    <script src="/assets/js/cloudzoom.js"></script>
+    <script src="https://unpkg.com/xzoom/dist/xzoom.min.js"></script>
 
 
     <script type = "text/javascript">
-        CloudZoom.quickStart();
+
+        $(".xzoom, .xzoom-gallery").xzoom({tint: '#333', Xoffset: 15});
 
         // Initialize the slider.
         $(function(){

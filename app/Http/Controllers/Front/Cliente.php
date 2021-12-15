@@ -61,8 +61,12 @@ class Cliente extends Controller
             order by VP.NuItem;
 
             ');
-            $dados['vendas_pagamento'][$venda->CdVenda] = \App\Models\VendaProdutos::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdVenda' => $venda->CdVenda])->get();
+            $dados['vendas_pagamento'][$venda->CdVenda] = \App\Models\VendaPagamento::where(['CdEstabel' => Session::get('loja_estabelecimento'), 'NuCaixa' => Session::get('loja_caixa'), 'CdVenda' => $venda->CdVenda])->get();
+            $dados['vendas_entrega'][$venda->CdVenda] = \App\Models\FormaEntrega::where('CdEntrega', $venda->CdEntrega)->first();
+
         }
+
+        //dd($dados);
 
         $dados['pessoa'] = DB::connection('mysql_loja')->select('
             select * from cliente a

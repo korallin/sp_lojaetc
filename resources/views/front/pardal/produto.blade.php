@@ -1,10 +1,17 @@
 @extends('front.'.\Illuminate\Support\Facades\Session::get('loja').'.master')
 
 @section('css')
-    <!-- cloudzoom Style CSS -->
-    <link rel="stylesheet" href="/assets/css/cloudzoom.css">
+
     <!-- thumbelina Style CSS -->
     <link rel="stylesheet" href="/assets/css/thumbelina.css">
+    <link rel="stylesheet" href="https://unpkg.com/xzoom/dist/xzoom.css">
+
+    <style>
+        .xzoom {
+            -webkit-box-shadow:none !important; box-shadow:none !important;
+        }
+    </style>
+
 @endsection
 
 @section('content')
@@ -43,41 +50,21 @@
                                             @if($item->NmFoto == '')
                                                 <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
                                             @else
-                                                <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}"  class="" id ="zoom0" data-cloudzoom='
-                                                        zoomSizeMode:"image",
-                                                        autoInside: 550
-                                                    '>
+                                                <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" style="border:0px; -webkit-box-shadow:none; box-shadow:none;" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}" class="xzoom" xoriginal="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}">
                                             @endif
 
                                         </div>
-                                        @foreach($produto_fotos as $foto)
-                                            <div role="tabpanel" class="tab-pane product-image-position" id="img-tab-{{$foto->CdFoto}}">
-                                                <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" class="">
-                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" alt="{{$item->NmProduto}}" class="" id ="zoom{{$foto->CdFoto}}" data-cloudzoom='
-                                                        zoomSizeMode:"image",
-                                                        autoInside: 550
-                                                    '>
-                                                </a>
-                                            </div>
-                                        @endforeach
+
+                                        <div class="xzoom-thumbs">
+                                            @foreach($produto_fotos as $foto)
+                                            <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}">
+                                                <img class="xzoom-gallery" style="width: 80px !important; border:0px; -webkit-box-shadow:none; box-shadow:none;" width="80" src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}"  xpreview="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}">
+                                            </a>
+                                            @endforeach
+                                        </div>
 
                                     </div>
                                 </div>
-
-                                <!-- Start Small images -->
-                                <ul class="product_small_images-bottom" role="tablist">
-                                    @foreach($produto_fotos as $foto)
-                                        <li role="presentation" class="" style="width: 80px !important; height: 80px !important; float: left; margin-right: 5px;">
-                                            <a href="#img-tab-{{$foto->CdFoto}}" class="mini" role="tab" data-toggle="tab">
-                                                <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" style="width: 80px !important; height: 80px !important;"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
-                                            </a>
-                                        </li>
-                                    @endforeach
-
-
-                                </ul>
-                                <!-- End Small images -->
-
 
                             </div>
                         </div>
@@ -179,29 +166,65 @@
 
                             @else
 
+                                @if(session()->has('sucesso'))
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <div>{{ session()->get('sucesso') }}</div>
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @endif
+
                                 <ul class="pro_dtl_btn">
-                                    <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">AVISE-ME</button></li>
+                                    <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">SOLICITAR ORÇAMENTO</button></li>
                                 </ul>
 
                                 <div class="modal fade" id="aviseme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 400px;">
+                                    <div class="modal-dialog modal-dialog-centered modal-md" style="max-width: 400px;">
                                         <div class="modal-content">
                                             <div class="modal-header bg-light">
-                                                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">AVISE-ME QUANDO CHEGAR</h5>
+                                                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">SOLICITAR UM ORÇAMENTO</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
 
-                                            <form action="{{ route('front.login_senha') }}" method="post">
+                                            <form action="{{ route('front.grava_orcamento') }}" method="post">
                                                 <div class="modal-body">
-                                                    <p>Informe os dados abaixo para que possamos lhe enviar um e-mail avisando.</p>
+                                                    <p>Informe os dados abaixo para que possamos entrar em contato para lhe enviar o orçamento.</p>
+
+                                                    @if($errors->all())
+                                                        <div class="container mb-3">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                        @foreach($errors->all() as $erro)
+                                                                            <div>{{ $erro }}</div>
+                                                                        @endforeach
+                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
 
                                                     @csrf
                                                     @method('post')
                                                     <div class="login-input-box">
-                                                        <input type="text" required name="nome" placeholder="Seu Nome">
-                                                        <input type="email" required name="email" placeholder="Seu e-mail">
+                                                        <input type="hidden" name="nome_produto" value="{{$item->NmProduto}}">
+                                                        <input type="hidden" name="id_produto" value="{{$item->CdProduto}}">
+                                                        <input type="text" required name="nome" placeholder="Seu Nome" value="{{ old('nome') }}">
+                                                        <input type="email" required name="email" placeholder="Seu e-mail" value="{{ old('nome') }}">
+                                                        <input type="text" required name="celular" placeholder="Celular" value="{{ old('nome') }}">
+                                                        <textarea rows="3" name="mensagem" style="width: 100%; font-size: 14px;" placeholder="Gostaria de um orçamento e mais informações sobre o produto {{$item->NmProduto}}">{{ old('mensagem') }}</textarea>
                                                     </div>
 
 
@@ -331,11 +354,12 @@
     <!-- thumbelina Zoomin JS -->
     <script src="/assets/js/thumbelina.js"></script>
     <!-- cloudzoom Zoomin JS -->
-    <script src="/assets/js/cloudzoom.js"></script>
+    <script src="https://unpkg.com/xzoom/dist/xzoom.min.js"></script>
 
 
     <script type = "text/javascript">
-        CloudZoom.quickStart();
+
+        $(".xzoom, .xzoom-gallery").xzoom({tint: '#333', Xoffset: 15});
 
         // Initialize the slider.
         $(function(){
@@ -360,6 +384,10 @@
             });
             $(id).addClass('active');
         });
+
+        @if($errors->all())
+            $('#aviseme').modal();
+        @endif
 
 
 

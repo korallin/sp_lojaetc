@@ -112,7 +112,7 @@
                                                 @foreach($dados['vendas'] as $venda)
                                                 <tr>
                                                     <td>{{$venda->CdVenda}}</td>
-                                                    <td>{{ date('d/m/Y') }}</td>
+                                                    <td>{{ date('d/m/Y', strtotime($venda->DtVenda)) }}</td>
                                                     <td>
                                                         @if($venda->CdSituacao == 1) <span class="badge badge-info">Recebido</span> @endif
                                                         @if($venda->CdSituacao == 2) <span class="badge badge-primary">Pagamento Confirmado</span> @endif
@@ -142,8 +142,14 @@
                                                                     <div class="card-body small">
                                                                         <h4>Pagamento</h4>
                                                                         <p class="mb-0">Cartão de Crédito</p>
-                                                                        <p class="mb-0">Status: @if($venda->CdSituacao == 1) <span class="badge badge-info">Recebido</span> @endif</p>
-                                                                        <p class="mb-0">Entrega: Correios</p>
+                                                                        <p class="mb-0">Status:
+                                                                            @if($venda->CdSituacao == 1) <span class="badge badge-info">Recebido</span> @endif
+                                                                            @if($venda->CdSituacao == 2) <span class="badge badge-primary">Pagamento Confirmado</span> @endif
+                                                                            @if($venda->CdSituacao == 3) <span class="badge badge-secondary">Enviado</span> @endif
+                                                                            @if($venda->CdSituacao == 4) <span class="badge badge-success">Finalizado </span> @endif
+                                                                            @if($venda->CdSituacao == 9) <span class="badge badge-danger">Cancelado</span> @endif
+                                                                        </p>
+                                                                        <p class="mb-0">Entrega: {{ $dados['vendas_entrega'][$venda->CdVenda]->NmEntrega }}<br><small>{{ $dados['vendas_entrega'][$venda->CdVenda]->TxEntrega }}</small></p>
                                                                     </div>
                                                                 </div>
                                                             </div>

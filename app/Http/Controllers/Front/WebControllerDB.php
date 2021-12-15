@@ -28,9 +28,10 @@ class WebControllerDB extends Controller
         select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
-			if(PF.NmFoto is null, 0,1) as StFoto
+			if(PF.NmFoto is null, 0,1) as StFoto,
+           max(PE.QtEstoque) as estoque
         from produto PR
-        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
+        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
         join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
         join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
@@ -86,9 +87,10 @@ class WebControllerDB extends Controller
         select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
-			if(PF.NmFoto is null, 0,1) as StFoto
+			if(PF.NmFoto is null, 0,1) as StFoto,
+           max(PE.QtEstoque) as estoque
         from produto PR
-        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
+        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
         join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
         join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
@@ -152,9 +154,10 @@ class WebControllerDB extends Controller
         select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
-			if(PF.NmFoto is null, 0,1) as StFoto
+			if(PF.NmFoto is null, 0,1) as StFoto,
+           max(PE.QtEstoque) as estoque
         from produto PR
-        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
+        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
         join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
         join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
@@ -213,7 +216,7 @@ class WebControllerDB extends Controller
 			if(PF.NmFoto is null, 0,1) as StFoto, GX.CdDepartamento as CdDepartamento,
                max(PE.QtEstoque) as estoque
         from produto PR
-        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
+        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
         left join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
         left join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
@@ -274,7 +277,7 @@ class WebControllerDB extends Controller
 			if(PF.NmFoto is null, 0,1) as StFoto
 
         from produto PR
-        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto)
+        join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
         join produto_preco PP on (PP.CdProduto = PR.CdProduto and PP.CdDetalhe = PD.CdDetalhe )
         join produto_estoque PE on (PE.CdProduto = PD.CdProduto and PE.CdDetalhe = PD.CdDetalhe and PE.CdEstabel = ? )
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
@@ -306,6 +309,76 @@ class WebControllerDB extends Controller
         //dd($paginacao);
 
         return view($view, ['produtos' => $produtos, 'produto_detalhe' => $produto_detalhe, 'produto_fotos' => $produtos_fotos, 'produtos_outros' => $produtos_outros, 'request' => $request]);
+
+    }
+
+    public function grava_orcamento(Request $request)
+    {
+        $estabel = \App\Models\Estabelecimento::first();
+
+        $rules = [
+            'nome' => 'required',
+            'email' => 'required',
+            'celular' => 'required',
+            'mensagem' => 'required',
+        ];
+
+        $mensages = [
+            'nome.required' => 'O Nome tem que ser preenchido.',
+            'email.required' => 'O e-mail tem que ser preenchido.',
+            'celular.required' => 'O Celular tem que ser preenchido.',
+            'mensagem.required' => 'Informe a mensagem'
+        ];
+
+        $request->validate($rules, $mensages);
+
+        $contato = new \App\Models\Contato();
+        $contato->NmAssunto = 'Solicitação de Orçamento - '.$request->nome_produto;
+        $contato->NmPessoa = $request->nome;
+        $contato->NmEmail = $request->email;
+        $contato->NuTelefone = \App\Http\Controllers\Auxiliar::l_int($request->celular);
+        $contato->TxObs = htmlentities($request->mensagem);
+        $contato->NuIp = $request->ip();
+        $contato->DtAtualizacao = date('Y-m-d H:i:s');
+        $contato->save();
+
+        return redirect(Session::get('_previous')['url'])->with(['sucesso' => 'Em breve um de nossos colaboradores irá responder sua mensagem. Agradecemos seu interesse.']);
+
+        //return redirect()->route('front.contato')->with('sucesso', 'Em breve um de nossos colaboradores irá responder sua mensagem. Agradecemos seu contato.');
+
+    }
+
+    public function grava_aviseme(Request $request)
+    {
+        $estabel = \App\Models\Estabelecimento::first();
+
+        $rules = [
+            'nome' => 'required',
+            'email' => 'required',
+
+        ];
+
+        $mensages = [
+            'nome.required' => 'O Nome tem que ser preenchido.',
+            'email.required' => 'O e-mail tem que ser preenchido.',
+
+        ];
+
+        $request->validate($rules, $mensages);
+
+        $contato = new \App\Models\ProdutoAviso();
+        $contato->CdProduto = $request->id_produto;
+        $contato->CdDetalhe = $request->id_detalhe;
+        $contato->CdCliente = Session::get('login_status');
+        $contato->NmCliente = $request->nome;
+        $contato->NmEmail = $request->email;
+        $contato->DtCadastro = date('Y-m-d H:i:s');
+        $contato->DtAtualizacao = date('Y-m-d H:i:s');
+        $contato->save();
+
+        return redirect(Session::get('_previous')['url'])->with(['sucesso' => 'Assim que repormos o estoque lhe avisaremos.']);
+
+        //return redirect()->route('front.contato')->with('sucesso', 'Em breve um de nossos colaboradores irá responder sua mensagem. Agradecemos seu contato.');
 
     }
 

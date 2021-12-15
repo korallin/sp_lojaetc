@@ -223,8 +223,8 @@
                                                         <input type="hidden" name="id_produto" value="{{$item->CdProduto}}">
                                                         <input type="text" required name="nome" placeholder="Seu Nome" value="{{ old('nome') }}">
                                                         <input type="email" required name="email" placeholder="Seu e-mail" value="{{ old('nome') }}">
-                                                        <input type="text" required name="celular" placeholder="Celular" value="{{ old('nome') }}">
-                                                        <textarea rows="3" name="mensagem" style="width: 100%; font-size: 14px;" placeholder="Gostaria de um orçamento e mais informações sobre o produto {{$item->NmProduto}}">{{ old('mensagem') }}</textarea>
+                                                        <input type="text" required class="celular" name="celular" placeholder="Celular" value="{{ old('nome') }}">
+                                                        <textarea rows="3" name="mensagem" style="width: 100%; font-size: 12px;" placeholder="">{{ old('mensagem',"Gostaria de um orçamento e mais informações sobre o produto ".$item->NmProduto) }}</textarea>
                                                     </div>
 
 
@@ -355,9 +355,17 @@
     <script src="/assets/js/thumbelina.js"></script>
     <!-- cloudzoom Zoomin JS -->
     <script src="https://unpkg.com/xzoom/dist/xzoom.min.js"></script>
+    <script src="/assets/js/jquery.mask.min.js" type="text/javascript"></script>
 
+    <script>
+        $(document).ready(function(e) {
 
-    <script type = "text/javascript">
+            $('.cep').mask('00.000-000');
+            $('.telefone').mask('(00) 0000-0000');
+            $('.celular').mask('(00) 0 0000-0000');
+            $('.cpf').mask('000.000.000-00');
+
+        });
 
         $(".xzoom, .xzoom-gallery").xzoom({tint: '#333', Xoffset: 15});
 

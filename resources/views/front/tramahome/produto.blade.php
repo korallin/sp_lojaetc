@@ -44,45 +44,26 @@
                             <div class="product_big_images-top">
                                 <div class="portfolio-full-image tab-content">
 
-                                        <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-0">
+                                    <div role="tabpanel" class="tab-pane active product-image-position" id="img-tab-0">
 
-                                                @if($item->NmFoto == '')
-                                                    <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
-                                                @else
-                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}"  class="" id ="zoom0" data-cloudzoom='
-                                                        zoomSizeMode:"image",
-                                                        autoInside: 550
-                                                    '>
-                                                @endif
+                                        @if($item->NmFoto == '')
+                                            <img src="/assets/images/no-foto.jpg" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
+                                        @else
+                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}" style="border:0px; -webkit-box-shadow:none; box-shadow:none;" alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}" class="xzoom" xoriginal="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $item->NmFoto }}">
+                                        @endif
 
-                                        </div>
+                                    </div>
+
+                                    <div class="xzoom-thumbs">
                                         @foreach($produto_fotos as $foto)
-                                            <div role="tabpanel" class="tab-pane product-image-position" id="img-tab-{{$foto->CdFoto}}">
-
-                                                    <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" alt="{{$item->NmProduto}}" class="" id ="zoom{{$foto->CdFoto}}" data-cloudzoom='
-                                                        zoomSizeMode:"image",
-                                                        autoInside: 550
-                                                    '>
-
-                                            </div>
+                                            <a href="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}">
+                                                <img class="xzoom-gallery" style="width: 80px !important; border:0px; -webkit-box-shadow:none; box-shadow:none;" width="80" src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}"  xpreview="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}">
+                                            </a>
                                         @endforeach
+                                    </div>
 
                                 </div>
                             </div>
-
-                            <!-- Start Small images -->
-                            <ul class="product_small_images-bottom" role="tablist">
-                                @foreach($produto_fotos as $foto)
-                                    <li role="presentation" class="" style="width: 80px !important; height: 80px !important; float: left; margin-right: 5px;">
-                                        <a href="#img-tab-{{$foto->CdFoto}}" class="mini" role="tab" data-toggle="tab">
-                                            <img src="{{\Illuminate\Support\Facades\Session::get('loja_imagens')}}{{ $foto->NmFoto }}" style="width: 80px !important; height: 80px !important;"  alt="{{$item->NmProduto}}" title="{{$item->NmProduto}}">
-                                        </a>
-                                    </li>
-                                @endforeach
-
-
-                            </ul>
-                            <!-- End Small images -->
 
 
                         </div>
@@ -237,6 +218,8 @@
 
                                                 @csrf
                                                 @method('post')
+                                                <input type="hidden" name="id_detalhe" value="{{$produto_detalhe[0]->CdDetalhe}}">
+                                                <input type="hidden" name="id_produto" value="{{$item->CdProduto}}">
                                                 <div class="login-input-box">
                                                     <input type="text" required name="nome" placeholder="Seu Nome">
                                                     <input type="email" required name="email" placeholder="Seu e-mail">

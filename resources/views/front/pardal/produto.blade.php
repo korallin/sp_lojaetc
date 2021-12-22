@@ -91,7 +91,7 @@
                             </div>
                             <!-- pro_details end -->
 
-                            @if($item->estoque > 0)
+                            @if($item->estoque > 0 and $item->VlPrecoMin > 0)
 
                                 <form action="{{ route('front.carrinho_add') }}" method="post">
 
@@ -166,78 +166,140 @@
 
                             @else
 
-                                @if(session()->has('sucesso'))
+                                @if($item->status_venda == 0)
 
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                <div>{{ session()->get('sucesso') }}</div>
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                                    @if(session()->has('sucesso'))
+
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    <div>{{ session()->get('sucesso') }}</div>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    @endif
+
+                                    <ul class="pro_dtl_btn">
+                                        <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">SOLICITAR ORÇAMENTO</button></li>
+                                    </ul>
+
+                                    <div class="modal fade" id="aviseme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-md" style="max-width: 400px;">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-light">
+                                                    <h5 class="modal-title font-weight-bold" id="exampleModalLabel">SOLICITAR UM ORÇAMENTO</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+
+                                                <form action="{{ route('front.grava_orcamento') }}" method="post">
+                                                    <div class="modal-body">
+                                                        <p>Informe os dados abaixo para que possamos entrar em contato para lhe enviar o orçamento.</p>
+
+                                                        @if($errors->all())
+                                                            <div class="container mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                            @foreach($errors->all() as $erro)
+                                                                                <div>{{ $erro }}</div>
+                                                                            @endforeach
+                                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        @csrf
+                                                        @method('post')
+                                                        <div class="login-input-box">
+                                                            <input type="hidden" name="nome_produto" value="{{$item->NmProduto}}">
+                                                            <input type="hidden" name="id_produto" value="{{$item->CdProduto}}">
+                                                            <input type="text" required name="nome" placeholder="Seu Nome" value="{{ old('nome') }}">
+                                                            <input type="email" required name="email" placeholder="Seu e-mail" value="{{ old('nome') }}">
+                                                            <input type="text" required class="celular" name="celular" placeholder="Celular" value="{{ old('nome') }}">
+                                                            <textarea rows="3" name="mensagem" style="width: 100%; font-size: 12px;" placeholder="">{{ old('mensagem',"Gostaria de um orçamento e mais informações sobre o produto ".$item->NmProduto) }}</textarea>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="button-box">
+                                                            <button class="login-btn btn" type="submit"><span>Enviar</span></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+
+                                    <ul class="pro_dtl_btn">
+                                        <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">AVISE-ME</button></li>
+                                    </ul>
+
+                                    <div class="modal fade" id="aviseme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 400px;">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-light">
+                                                    <h5 class="modal-title font-weight-bold" id="exampleModalLabel">AVISE-ME QUANDO CHEGAR</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+
+                                                <form action="{{ route('front.login_senha') }}" method="post">
+                                                    <div class="modal-body">
+                                                        <p>Informe os dados abaixo para que possamos lhe enviar um e-mail avisando.</p>
+
+                                                        @if($errors->all())
+                                                            <div class="container mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                            @foreach($errors->all() as $erro)
+                                                                                <div>{{ $erro }}</div>
+                                                                            @endforeach
+                                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        @csrf
+                                                        @method('post')
+                                                        <input type="hidden" name="id_detalhe" value="{{$produto_detalhe[0]->CdDetalhe}}">
+                                                        <input type="hidden" name="id_produto" value="{{$item->CdProduto}}">
+                                                        <div class="login-input-box">
+                                                            <input type="text" required name="nome" placeholder="Seu Nome">
+                                                            <input type="email" required name="email" placeholder="Seu e-mail">
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="button-box">
+                                                            <button class="login-btn btn" type="submit"><span>Enviar</span></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
 
                                 @endif
 
-                                <ul class="pro_dtl_btn">
-                                    <li><button type="button" data-toggle="modal" data-target="#aviseme" class="btn buy_now_btn" style="width: 300px;">SOLICITAR ORÇAMENTO</button></li>
-                                </ul>
-
-                                <div class="modal fade" id="aviseme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-md" style="max-width: 400px;">
-                                        <div class="modal-content">
-                                            <div class="modal-header bg-light">
-                                                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">SOLICITAR UM ORÇAMENTO</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-
-                                            <form action="{{ route('front.grava_orcamento') }}" method="post">
-                                                <div class="modal-body">
-                                                    <p>Informe os dados abaixo para que possamos entrar em contato para lhe enviar o orçamento.</p>
-
-                                                    @if($errors->all())
-                                                        <div class="container mb-3">
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                                        @foreach($errors->all() as $erro)
-                                                                            <div>{{ $erro }}</div>
-                                                                        @endforeach
-                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-
-                                                    @csrf
-                                                    @method('post')
-                                                    <div class="login-input-box">
-                                                        <input type="hidden" name="nome_produto" value="{{$item->NmProduto}}">
-                                                        <input type="hidden" name="id_produto" value="{{$item->CdProduto}}">
-                                                        <input type="text" required name="nome" placeholder="Seu Nome" value="{{ old('nome') }}">
-                                                        <input type="email" required name="email" placeholder="Seu e-mail" value="{{ old('nome') }}">
-                                                        <input type="text" required class="celular" name="celular" placeholder="Celular" value="{{ old('nome') }}">
-                                                        <textarea rows="3" name="mensagem" style="width: 100%; font-size: 12px;" placeholder="">{{ old('mensagem',"Gostaria de um orçamento e mais informações sobre o produto ".$item->NmProduto) }}</textarea>
-                                                    </div>
-
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div class="button-box">
-                                                        <button class="login-btn btn" type="submit"><span>Enviar</span></button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
 
                             @endif
 

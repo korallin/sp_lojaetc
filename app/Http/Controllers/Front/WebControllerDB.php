@@ -29,6 +29,7 @@ class WebControllerDB extends Controller
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
 			if(PF.NmFoto is null, 0,1) as StFoto,
+               PD.StLojaVirtualVenda as status_venda,
            max(PE.QtEstoque) as estoque
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
@@ -70,7 +71,9 @@ class WebControllerDB extends Controller
     {
 
 
-
+        if(!isset($request->ordem)){
+            $request->merge(['ordem' => 0]);
+        }
 
         $departamento = DB::connection('mysql_loja')->select('
 
@@ -88,6 +91,7 @@ class WebControllerDB extends Controller
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
 			if(PF.NmFoto is null, 0,1) as StFoto,
+               PD.StLojaVirtualVenda as status_venda,
            max(PE.QtEstoque) as estoque
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
@@ -155,6 +159,7 @@ class WebControllerDB extends Controller
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
 			if(PF.NmFoto is null, 0,1) as StFoto,
+           PD.StLojaVirtualVenda as status_venda,
            max(PE.QtEstoque) as estoque
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
@@ -184,7 +189,7 @@ class WebControllerDB extends Controller
             )
             )
             )
-            ) : "StFoto desc, PR.DtAtualizacao desc, rand()").'
+            ) : "min(PP.VlPreco) ASC").'
 
 
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'), $request->busca, $request->busca]);
@@ -214,6 +219,7 @@ class WebControllerDB extends Controller
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
 			if(PF.NmFoto is null, 0,1) as StFoto, GX.CdDepartamento as CdDepartamento,
+               PD.StLojaVirtualVenda as status_venda,
                max(PE.QtEstoque) as estoque
         from produto PR
         join produto_detalhe PD on (PR.CdProduto = PD.CdProduto and PD.StDetalhe = 1)
@@ -222,19 +228,21 @@ class WebControllerDB extends Controller
         join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
         left join produto_foto PF on (PF.CdProduto = PR.CdProduto and PF.StPrincipal = 1)
 
-        join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
-        join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
+        left join produto_x_departamento GX on (GX.CdProduto = PR.CdProduto)
+        left join produto_departamento GR on (GR.CdDepartamento = GX.CdDepartamento)
         left join produto_departamento SG on (GR.CdDepartamentoPai = SG.CdDepartamento)
 
         where PR.DtDesativacao is null
         and PP.CdTabela in (?)
         and PR.CdProduto = ?
-        and PR.StLojaVirtual = 1
+
 
         group by PR.CdProduto
         limit 1;
 
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'),$id]);
+
+        //dd($produtos);
 
         $produtos_fotos = DB::connection('mysql_loja')->select('
 
@@ -255,6 +263,7 @@ class WebControllerDB extends Controller
             select 	PD.*, PE.QtEstoque, PC.CdReferencia,
                         (select max(VlPreco) from produto_preco where CdTabela in(?) and CdProduto = PD.CdProduto and CdDetalhe = PD.CdDetalhe ) as VlVenda,
                         (select min(VlPreco) from produto_preco where CdTabela in(?) and CdProduto = PD.CdProduto and CdDetalhe = PD.CdDetalhe ) as VlPromocional,
+                   PD.StLojaVirtualVenda as status_venda,
                         PE.QtEstoque as estoque
             from produto_detalhe PD
             join produto_codigo PC on (PD.CdProduto = PC.CdProduto and PD.CdDetalhe = PC.CdDetalhe and PC.StPrincipal = 1 )
@@ -274,6 +283,7 @@ class WebControllerDB extends Controller
         select   PR.CdProduto, PR.NmProduto, PR.TxProduto, PC.CdReferencia,
 			min(PP.VlPreco) as VlPrecoMin, max(PP.VlPreco) as VlPrecoMax,
 			PF.NmFoto,
+               PD.StLojaVirtualVenda as status_venda,
 			if(PF.NmFoto is null, 0,1) as StFoto
 
         from produto PR

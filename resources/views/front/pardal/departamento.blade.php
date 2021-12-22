@@ -111,7 +111,7 @@
 
                         <!-- shop-sidebar start -->
                         <div class="sidbar-product shop-sidebar mb--30">
-                            <h4 class="title">PRODUTOS POPULARES</h4>
+                            <h4 class="title">TOP +VENDIDOS</h4>
                             <!-- sidbar-product-inner start -->
 
                             @foreach($produtos_populares as $item)

@@ -112,14 +112,14 @@ class WebControllerDB extends Controller
                  '.(isset($request->ordem) ? (
                     $request->ordem == 'A' ?  'PR.NmProduto ASC' : (
                         $request->ordem == 'Z' ?  'PR.NmProduto DESC' : (
-                            $request->ordem == '0' ?  'min(PP.VlPreco) ASC' : (
-                                $request->ordem == '9' ?  'min(PP.VlPreco) DESC' : (
-                                "StFoto desc, PR.DtAtualizacao desc, rand()"
+                            $request->ordem == '0' ?  'PP.VlPreco ASC' : (
+                                $request->ordem == '9' ?  'PP.VlPreco DESC' : (
+                                "PP.VlPreco ASC"
                                 )
                             )
                         )
                     )
-                ) : "StFoto desc, PR.DtAtualizacao desc, rand()").'
+                ) : "PP.VlPreco ASC").'
 
 
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'),$id,$id]);
@@ -184,12 +184,12 @@ class WebControllerDB extends Controller
             $request->ordem == 'Z' ?  'PR.NmProduto DESC' : (
             $request->ordem == '0' ?  'min(PP.VlPreco) ASC' : (
             $request->ordem == '9' ?  'min(PP.VlPreco) DESC' : (
-            "StFoto desc, PR.DtAtualizacao desc, rand()"
+            "PP.VlPreco ASC"
             )
             )
             )
             )
-            ) : "min(PP.VlPreco) ASC").'
+            ) : "PP.VlPreco ASC").'
 
 
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'), $request->busca, $request->busca]);

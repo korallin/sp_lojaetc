@@ -212,11 +212,11 @@
 
                                         @if($departamentos1)
 
-                                            <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}">{{ $dep->NmGrupo }}</a>
+                                            <li><a href="{{route('front.departamento',[$dep->CdGrupo,Illuminate\Support\Str::slug($dep->NmGrupo)])}}?ordem=0">{{ $dep->NmGrupo }}</a>
                                                 <ul class="mega-menu">
 
                                                     @foreach($departamentos1 as $dep1)
-                                                        <li class="p-2"><a href="{{route('front.departamento',[$dep1->CdSubGrupo,Illuminate\Support\Str::slug($dep1->NmSubGrupo)])}}">{{ $dep1->NmSubGrupo }}</a></li>
+                                                        <li class="p-2"><a href="{{route('front.departamento',[$dep1->CdSubGrupo,Illuminate\Support\Str::slug($dep1->NmSubGrupo)])}}?ordem=0">{{ $dep1->NmSubGrupo }}</a></li>
                                                     @endforeach
                                                 </ul>
                                             </li>

@@ -195,10 +195,6 @@ class WebControllerDB extends Controller
         ', [Session::get('loja_estabelecimento'),Session::get('loja_tabelas'), $request->busca, $request->busca]);
 
 
-
-
-
-
         $view = 'front.'.Session::get('loja').'.busca';
 
         //$paginacao = $this->arrayPaginator($produtos, $request);

@@ -54,9 +54,9 @@ sidebarSearch();
 var heroSlider = $('.hero-slider');
 heroSlider.slick({
     arrows: true,
-    autoplay: false,
+    autoplay: true,
     autoplaySpeed: 5000,
-    dots: false,
+    dots: true,
     pauseOnFocus: false,
     pauseOnHover: false,
     fade: true,

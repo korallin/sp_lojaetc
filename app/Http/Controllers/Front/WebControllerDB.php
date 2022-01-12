@@ -58,7 +58,7 @@ class WebControllerDB extends Controller
             and CdTipo = 1
             and DtInicial <= now()
             and DtFinal >= now()
-            order by rand() limit 1;
+            order by rand();
         ');
 
         //dump($view);
